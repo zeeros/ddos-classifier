@@ -1,1 +1,12 @@
-* Readme
+* ANN for DDoS attacks detection
+** Content
+*** Jupyter notebooks
+- training.ipynb :: Network training
+- testing.ipynb :: Network testing
+- performance_evaluation.ipynb :: Performance highlights and
+     comparison with state-of-the-art solutions
+*** Modules
+- preprocessing.py :: Data preprocessing logic
+- model.py :: Network architecture
+** Dataset
+[[https://www.unb.ca/cic/datasets/ddos-2019.html][CICDDoS2019]]
