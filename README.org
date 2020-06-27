@@ -1,4 +1,5 @@
 * ANN for DDoS attacks detection
+<<<<<<< HEAD
 ** Content
 *** Jupyter notebooks
 - training.ipynb :: Network training
@@ -8,5 +9,9 @@
 *** Modules
 - preprocessing.py :: Data preprocessing logic
 - model.py :: Network architecture
+=======
+- notebook.ipynb :: Includes preprocessijng, training, testing and
+                    model export
+>>>>>>> Refactoring to hold notebook and pipeline logic
 ** Dataset
 [[https://www.unb.ca/cic/datasets/ddos-2019.html][CICDDoS2019]]
