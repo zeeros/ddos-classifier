@@ -14,7 +14,7 @@ ENV PATH=/opt/conda/envs/$CONDA_ENV_NAME/bin:$PATH
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 # Download the training dataset
-RUN wget -P /usr/src/app/data --timeout=1 --tries=0 --retry-connrefused  http://205.174.165.80/CICDataset/CICDDoS2019/Dataset/CSVs/CSV-01-12.zip
+RUN wget -q -P /usr/src/app/data --timeout=1 --tries=0 --retry-connrefused  http://205.174.165.80/CICDataset/CICDDoS2019/Dataset/CSVs/CSV-01-12.zip
 
 COPY *.py ./
 CMD ls -la
