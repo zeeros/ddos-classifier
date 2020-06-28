@@ -9,6 +9,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 def __preprocess_dataframe(df, features, metadata=None):
     """
     If metadata is passed, return also the labels
@@ -48,7 +49,7 @@ def __get_features(archive, metadata):
     return feature_columns
 
 
-def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10**10):
+def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10):
     labels = ["BENIGN", "Syn", "UDPLag", "UDP", "LDAP", "MSSQL", "NetBIOS", "WebDDoS"]
     LoadedData = collections.namedtuple("LoadedData", "feature_columns labels train_dfs test_dfs")
 
@@ -59,7 +60,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10**10):
     train_dfs = None
     feature_columns = None
     if train_csv is not None:
-    	logging.debug('Load training dataset...')
+        logging.debug('Load training dataset...')
         train_archive = zipfile.ZipFile(data_path + "/CSV-01-12.zip", 'r')
         # Feature columns describe how to use the input
         feature_columns = __get_features(train_archive, metadata)
