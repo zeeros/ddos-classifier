@@ -16,7 +16,6 @@ df = preprocess.load_dataset(
     metadata_path = "/usr/src/app/data/metadata.json",
     random_state=1
 )
-df = df.head(n=10**4)
+df = df.head(n=10**2)
 with open(args.output_dataset_path, 'w') as dataset_file:
-    #df.to_csv(dataset_file)
     dataset_file.write("asd")
