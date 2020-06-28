@@ -18,4 +18,4 @@ df = preprocess.load_dataset(
 )
 
 with open(args.output_dataset_path, 'w') as dataset_file:
-    df.to_csv(file_name)
+    df.to_csv(dataset_file)
