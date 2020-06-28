@@ -51,7 +51,12 @@ def __get_features(archive, metadata):
 
 def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10):
     labels = ["BENIGN", "Syn", "UDPLag", "UDP", "LDAP", "MSSQL", "NetBIOS", "WebDDoS"]
-    LoadedData = collections.namedtuple("LoadedData", "feature_columns labels train_dfs test_dfs")
+    field_names = ["feature_columns", "labels"]
+    if train_csv is not None:
+        field_names.append("train_dfs")
+    if test_csv is not None:
+        field_names.append("test_dfs")
+    LoadedData = collections.namedtuple("LoadedData", field_names)
 
     logging.debug('Load metadata')
     with open(data_path + "/metadata.json") as metadata_file:
