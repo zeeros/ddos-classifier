@@ -1,16 +1,11 @@
 name: Preprocessing
 description: Preprocess the training dataset
-inputs:
-- {name: Input 1, type: GCSPath, description: 'Data for Input 1'}
-- {name: Parameter 1, type: Integer, default: '100', description: 'Parameter 1 description'}
 outputs:
-- {name: Output 1, description: 'Output 1 data'}
+- {name: Preprocessed dataset, type: String}
 implementation:
   container:
     image: zeeros/ddos-classifier-preprocess
     command: [
-      python3, /usr/src/app/call.py,
-      --input1-path,  {inputPath:  Input 1},
-      --param1,       {inputValue: Parameter 1},
-      --output1-path, {outputPath: Output 1},
+      /usr/src/app/program.py,
+      --output1-path, {outputPath: Preprocessed dataset},
     ]
