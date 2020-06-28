@@ -4,7 +4,7 @@ from pathlib import Path
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Preoprocessing component for the DDoS classifier')
-parser.add_argument('--output-dataset-path', type=String, help='Path to the preprocessed dataset')
+parser.add_argument('--output-dataset-path', type=str, help='Path to the preprocessed dataset')
 args = parser.parse_args()
 
 # Creating the directory where the output file will be created (the directory may or may not exist).
