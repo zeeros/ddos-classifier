@@ -18,4 +18,5 @@ df = preprocess.load_dataset(
 )
 df = df.head(n=10**4)
 with open(args.output_dataset_path, 'w') as dataset_file:
-    df.to_csv(dataset_file)
+    #df.to_csv(dataset_file)
+    dataset_file.write("asd")
