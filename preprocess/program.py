@@ -1,19 +1,22 @@
+import pandas as pd
 import preprocess
 import argparse
 from pathlib import Path
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Preoprocessing component for the DDoS classifier')
-parser.add_argument('--labels', nargs='+')
+parser.add_argument('--output-dataset-path', type=String, help='Path to the preprocessed dataset')
 args = parser.parse_args()
 
 # Creating the directory where the output file will be created (the directory may or may not exist).
-#Path(args.output1_path).parent.mkdir(parents=True, exist_ok=True)
+Path(args.output_dataset_path).parent.mkdir(parents=True, exist_ok=True)
 
-feature_columns, labels, train_dfs, test_dfs = preprocess.load_data(
-    data_path = "/usr/src/app/data",
-    train_csv = ['UDPLag.csv', 'Syn.csv', 'DrDoS_UDP.csv', 'DrDoS_NetBIOS.csv', 'DrDoS_MSSQL.csv', 'DrDoS_LDAP.csv'],
-    chunk_size=9**6
+df = preprocess.load_dataset(
+    csvs = ['UDPLag.csv', 'Syn.csv', 'DrDoS_UDP.csv', 'DrDoS_NetBIOS.csv', 'DrDoS_MSSQL.csv', 'DrDoS_LDAP.csv'],
+    zipfile_path = "/usr/src/app/data/CSV-01-12.zip",
+    metadata_path = "/usr/src/app/data/metadata.json",
+    random_state=1
 )
-#train_dfs.to_csv(args.output1_path)
-args.labels = labels
+
+with open(args.output_dataset_path, 'w') as dataset_file:
+    df.to_csv(file_name)

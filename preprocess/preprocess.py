@@ -51,13 +51,13 @@ def __get_features(archive, metadata):
 
 def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10):
     labels = ["BENIGN", "Syn", "UDPLag", "UDP", "LDAP", "MSSQL", "NetBIOS", "WebDDoS"]
-    LoadedData = collections.namedtuple("LoadedData", "feature_columns labels train_dfs test_dfs")
+    LoadedData = collections.namedtuple("LoadedData", "feature_columns labels train_df test_df")
 
     logging.debug('Load metadata')
     with open(data_path + "/metadata.json") as metadata_file:
         metadata = json.load(metadata_file)
 
-    train_dfs = None
+    train_df = None
     feature_columns = None
     if train_csv is not None:
         logging.debug('Load training dataset...')
@@ -80,19 +80,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
                 train_sets.append(df)
         # Merge the dataframes into a single one and shuffle it, random_state assures reproducibility
         logging.debug('     Merge dataframes and shuffle')
-        train_sets = pd.concat(train_sets).sample(frac=1, random_state=1)
-        # Split the dataframes in multiple chunks
-        logging.debug('     Split into smaller dataframes')
-        train_chunks = np.split(train_sets,
-                                range(chunk_size, math.ceil(train_sets.shape[0] / chunk_size) * chunk_size, chunk_size))
-        del train_sets
-        train_dfs = []
-        for train_chunk in train_chunks:
-            train_dfs.append({
-                "labels": train_chunk.pop("Label"),
-                "features": train_chunk
-            })
-        del train_chunks
+        train_df = pd.concat(train_sets).sample(frac=1, random_state=1)
 
     test_dfs = None
     if test_csv is not None:
@@ -122,4 +110,31 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
                 })
 
     logging.debug('Loading completed')
-    return LoadedData(feature_columns, labels, train_dfs, test_dfs)
+    return LoadedData(feature_columns, labels, train_df, test_dfs)
+
+def load_dataset(csvs, zipfile_path, metadata_path, random_state):
+
+    logging.debug('Loading metadata...')
+    with open(metadata_path) as metadata_file:
+        metadata = json.load(metadata_file)
+
+    logging.debug('Opening archive...')
+    archive = zipfile.ZipFile(zipfile_path, 'r')
+
+    feature_columns = __get_features(archive, metadata)
+    sets = []
+    for file in archive.namelist():
+        if any(file.endswith(t) for t in csvs):
+            logging.debug('     > Load %s', file)
+            df = __preprocess_dataframe(
+                df = pd.read_csv(
+                    archive.open(file),
+                    dtype={85: str}
+                ),
+                features = [fc.key.replace(" ", "_") for fc in feature_columns],
+                metadata = metadata
+            )
+            sets.append(df)
+    # Merge the dataframes into a single one and shuffle it, random_state assures reproducibility
+    logging.debug('Merging and shuffling...')
+    return pd.concat(train_sets).sample(frac=1, random_state=random_state)
