@@ -14,7 +14,6 @@ def __preprocess_dataframe(df, features, metadata=None):
     """
     If metadata is passed, return also the labels
     """
-    logging.debug('Processing dataframe...')
     # Trim columns name, replace whitespaces from columns name
     df = df.rename(columns=lambda x: x.strip().replace(" ", "_"))
     # Keep only features and label
