@@ -5,7 +5,9 @@ import math
 import zipfile
 import json
 import collections
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 def __preprocess_dataframe(df, features, metadata=None):
     """
@@ -50,19 +52,21 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10**10):
     labels = ["BENIGN", "Syn", "UDPLag", "UDP", "LDAP", "MSSQL", "NetBIOS", "WebDDoS"]
     LoadedData = collections.namedtuple("LoadedData", "feature_columns labels train_dfs test_dfs")
 
-    # Load metadata
+    logging.debug('Load metadata')
     with open(data_path + "/metadata.json") as metadata_file:
         metadata = json.load(metadata_file)
 
     train_dfs = None
     feature_columns = None
     if train_csv is not None:
+    	logging.debug('Load training dataset...')
         train_archive = zipfile.ZipFile(data_path + "/CSV-01-12.zip", 'r')
         # Feature columns describe how to use the input
         feature_columns = __get_features(train_archive, metadata)
         train_sets = []
         for file in train_archive.namelist():
             if any(file.endswith(t) for t in train_csv):
+                logging.debug(' > Load', file)
                 df = __preprocess_dataframe(
                     df=pd.read_csv(
                         train_archive.open(file),
@@ -74,8 +78,10 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10**10):
                 # Load csv to dataframe
                 train_sets.append(df)
         # Merge the dataframes into a single one and shuffle it, random_state assures reproducibility
+        logging.debug(' Merge dataframes and shuffle')
         train_sets = pd.concat(train_sets).sample(frac=1, random_state=1)
         # Split the dataframes in multiple chunks
+        logging.debug(' Split into smaller dataframes')
         train_chunks = np.split(train_sets,
                                 range(chunk_size, math.ceil(train_sets.shape[0] / chunk_size) * chunk_size, chunk_size))
         del train_sets
@@ -89,6 +95,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10**10):
 
     test_dfs = None
     if test_csv is not None:
+        logging.debug('Load testing dataset...')
         test_archive = zipfile.ZipFile(data_path + "/CSV-03-11.zip", 'r')
         # Feature columns describe how to use the input
         if feature_columns is None:
@@ -96,6 +103,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10**10):
         test_dfs = []
         for file in test_archive.namelist():
             if any(file.endswith(t) for t in test_csv):
+                logging.debug(' > Load', file)
                 file_test_dfs = []
                 for chunk in pd.read_csv(test_archive.open(file), dtype={85: str}, chunksize=chunk_size):
                     df = __preprocess_dataframe(
@@ -111,5 +119,5 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10**10):
                     "file": file,
                     "dataframe": file_test_dfs
                 })
-
+    logging.debug('Data is loaded')
     return LoadedData(feature_columns, labels, train_dfs, test_dfs)
