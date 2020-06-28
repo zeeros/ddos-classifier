@@ -14,6 +14,7 @@ def __preprocess_dataframe(df, features, metadata=None):
     """
     If metadata is passed, return also the labels
     """
+    logging.debug('Processing dataframe...')
     # Trim columns name, replace whitespaces from columns name
     df = df.rename(columns=lambda x: x.strip().replace(" ", "_"))
     # Keep only features and label
@@ -63,10 +64,8 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
         logging.debug('Load training dataset...')
         train_archive = zipfile.ZipFile(data_path + "/CSV-01-12.zip", 'r')
         # Feature columns describe how to use the input
-        logging.debug('Get feature columns...')
         feature_columns = __get_features(train_archive, metadata)
         train_sets = []
-        logging.debug('Load csv files...')
         for file in train_archive.namelist():
             if any(file.endswith(t) for t in train_csv):
                 logging.debug(' > Load', file)
