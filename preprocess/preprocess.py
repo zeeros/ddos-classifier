@@ -63,10 +63,10 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
         logging.debug('Load training dataset...')
         train_archive = zipfile.ZipFile(data_path + "/CSV-01-12.zip", 'r')
         # Feature columns describe how to use the input
-        logging.debug('Get feature columns', feature_columns)
+        logging.debug('Get feature columns...')
         feature_columns = __get_features(train_archive, metadata)
-        logging.debug(feature_columns)
         train_sets = []
+        logging.debug('Load csv files...')
         for file in train_archive.namelist():
             if any(file.endswith(t) for t in train_csv):
                 logging.debug(' > Load', file)
