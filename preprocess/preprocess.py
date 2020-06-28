@@ -68,7 +68,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
         train_sets = []
         for file in train_archive.namelist():
             if any(file.endswith(t) for t in train_csv):
-                logging.debug(' > Load', file)
+                logging.debug(' > Load', file[0])
                 df = __preprocess_dataframe(
                     df=pd.read_csv(
                         train_archive.open(file),
