@@ -135,4 +135,4 @@ def load_dataset(csvs, zipfile_path, metadata_path, random_state):
             sets.append(df)
     # Merge the dataframes into a single one and shuffle it, random_state assures reproducibility
     logging.debug('Merging and shuffling...')
-    return pd.concat(train_sets).sample(frac=1, random_state=random_state)
+    return pd.concat(sets).sample(frac=1, random_state=random_state)
