@@ -14,6 +14,7 @@ def __preprocess_dataframe(df, features, metadata=None):
     """
     If metadata is passed, return also the labels
     """
+    logging.debug('Preprocess_dataframe', logging.debug('Preprocess_dataframe'))
     # Trim columns name, replace whitespaces from columns name
     df = df.rename(columns=lambda x: x.strip().replace(" ", "_"))
     # Keep only features and label
@@ -40,6 +41,7 @@ def __get_features(archive, metadata):
         features += metadata['Label']['Features'][dataset_label]
     features = list(set(features))
     features = [fc.replace(" ", "_") for fc in features]
+    logging.debug('Features list:', features)
     # Use the first csv file in the archive to extract column features
     file = next((file for file in archive.namelist() if file.endswith(".csv")), None)
     df = __preprocess_dataframe(pd.read_csv(archive.open(file), dtype={85: str}), features)
