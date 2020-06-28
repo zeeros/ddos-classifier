@@ -68,7 +68,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
         train_sets = []
         for file in train_archive.namelist():
             if any(file.endswith(t) for t in train_csv):
-                logging.debug(' > Load', file[0])
+                logging.debug('     > Load', file[0])
                 df = __preprocess_dataframe(
                     df=pd.read_csv(
                         train_archive.open(file),
@@ -80,10 +80,10 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
                 # Load csv to dataframe
                 train_sets.append(df)
         # Merge the dataframes into a single one and shuffle it, random_state assures reproducibility
-        logging.debug(' Merge dataframes and shuffle')
+        logging.debug('     Merge dataframes and shuffle')
         train_sets = pd.concat(train_sets).sample(frac=1, random_state=1)
         # Split the dataframes in multiple chunks
-        logging.debug(' Split into smaller dataframes')
+        logging.debug('     Split into smaller dataframes')
         train_chunks = np.split(train_sets,
                                 range(chunk_size, math.ceil(train_sets.shape[0] / chunk_size) * chunk_size, chunk_size))
         del train_sets
@@ -105,7 +105,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
         test_dfs = []
         for file in test_archive.namelist():
             if any(file.endswith(t) for t in test_csv):
-                logging.debug(' > Load', file)
+                logging.debug('     > Load', file)
                 file_test_dfs = []
                 for chunk in pd.read_csv(test_archive.open(file), dtype={85: str}, chunksize=chunk_size):
                     df = __preprocess_dataframe(
@@ -121,5 +121,5 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
                     "file": file,
                     "dataframe": file_test_dfs
                 })
-    logging.debug('Data is loaded')
+    logging.debug('Loading completed')
     return LoadedData(feature_columns, labels, train_dfs, test_dfs)
