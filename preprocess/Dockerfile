@@ -16,5 +16,5 @@ WORKDIR /usr/src/app
 # Download the training dataset
 RUN wget -q -P /usr/src/app/data --timeout=1 --tries=0 --retry-connrefused  http://205.174.165.80/CICDataset/CICDDoS2019/Dataset/CSVs/CSV-01-12.zip
 
-COPY ../data/metadata.json ./data
+COPY metadata.json ./data
 COPY *.py ./
