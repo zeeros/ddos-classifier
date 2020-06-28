@@ -68,7 +68,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
         train_sets = []
         for file in train_archive.namelist():
             if any(file.endswith(t) for t in train_csv):
-                logging.debug('     > Load', file[0])
+                logging.debug('     > Load %s', file)
                 df = __preprocess_dataframe(
                     df=pd.read_csv(
                         train_archive.open(file),
@@ -105,7 +105,7 @@ def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10 ** 10)
         test_dfs = []
         for file in test_archive.namelist():
             if any(file.endswith(t) for t in test_csv):
-                logging.debug('     > Load', file)
+                logging.debug('     > Load %s', file)
                 file_test_dfs = []
                 for chunk in pd.read_csv(test_archive.open(file), dtype={85: str}, chunksize=chunk_size):
                     df = __preprocess_dataframe(
