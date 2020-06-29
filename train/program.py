@@ -15,7 +15,7 @@ df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 logging.debug('> Rows %s', df.shape[0])
 # Get features
 feature_columns = [tf.feature_column.numeric_column(key=key) for key in df.keys()]
-logging.debug(' '.join(feature_columns))
+logging.debug(feature_columns)
 # Get labels
 labels = ["BENIGN", "Syn", "UDPLag", "UDP", "LDAP", "MSSQL", "NetBIOS", "WebDDoS"]
 # Instantiate the model
