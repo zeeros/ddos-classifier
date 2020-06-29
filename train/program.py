@@ -10,7 +10,7 @@ parser.add_argument('--output-model-path', type=str, help='Path to the trained m
 args = parser.parse_args()
 
 # Get dataframe
-df = pd.read_csv(args.input_dataset_path, dtype={85: str}), features
+df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 # Get features
 feature_columns = [tf.feature_column.numeric_column(key=key) for key in df.keys()]
 # Get labels
