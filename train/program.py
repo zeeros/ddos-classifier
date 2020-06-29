@@ -4,6 +4,8 @@ import tensorflow as tf
 from pathlib import Path
 import logging
 
+logging.basicConfig(level=logging.DEBUG)
+
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Training component for the DDoS classifier')
 parser.add_argument('--input-dataset-path', type=str, help='Path to the preprocessed dataset')
