@@ -15,7 +15,8 @@ args = parser.parse_args()
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 logging.debug(df.columns.values)
-logging.debug('> Rows %s', df.shape[0])
+
+print(df.head())
 # Get features
 feature_columns = [tf.feature_column.numeric_column(key=key) for key in df.keys()]
 logging.debug(feature_columns)
