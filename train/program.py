@@ -54,4 +54,4 @@ Path(args.output_model_path).parent.mkdir(parents=True, exist_ok=True)
 
 # Save the model
 serving_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(tf.feature_column.make_parse_example_spec(feature_columns))
-estimator_path = classifier.export_saved_model(args.output_model_path, serving_input_fn)
+estimator_path = classifier.export_saved_model(args.output_model_path, serving_input_fn, as_text=True)
