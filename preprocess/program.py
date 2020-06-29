@@ -1,12 +1,11 @@
-import preprocess
 import argparse
-from pathlib import Path
 import pandas as pd
 import tensorflow as tf
 import zipfile
 import json
 import collections
 import logging
+from pathlib import Path
 
 logging.basicConfig(level=logging.DEBUG)
 
