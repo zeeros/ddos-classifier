@@ -12,6 +12,7 @@ args = parser.parse_args()
 
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
+logging.debug(df.columns.values)
 logging.debug('> Rows %s', df.shape[0])
 # Get features
 feature_columns = [tf.feature_column.numeric_column(key=key) for key in df.keys()]
@@ -38,7 +39,6 @@ def input_fn(df, batch_size=32):
     '''
     An input function for training or evaluating
     '''
-    print(df.columns.values)
     # Convert the inputs to a Dataset
     dataset = tf.data.Dataset.from_tensor_slices((dict(df[list(df.columns.values).remove("Label")]), df["Label"]))
     # Shuffle and repeat if you are in training mode
@@ -47,7 +47,7 @@ def input_fn(df, batch_size=32):
 
 # Train the model
 #for train_df in train_dfs:
-classifier.train(input_fn=lambda: input_fn(df), steps=10**4)
+#classifier.train(input_fn=lambda: input_fn(df), steps=10**4)
 
 # Creating the directory where the output file will be created (the directory may or may not exist).
 Path(args.output_model_path).parent.mkdir(parents=True, exist_ok=True)
