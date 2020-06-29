@@ -47,12 +47,13 @@ def input_fn(df, batch_size=32):
 
 # Train the model
 #for train_df in train_dfs:
-#classifier.train(input_fn=lambda: input_fn(df), steps=10**4)
+logging.debug("Training model...")
+classifier.train(input_fn=lambda: input_fn(df), steps=10**4)
 
 # Creating the directory where the output file will be created (the directory may or may not exist).
 Path(args.output_model_path).parent.mkdir(parents=True, exist_ok=True)
 
 # Save the model
+logging.debug("Saving model...")
 serving_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(tf.feature_column.make_parse_example_spec(feature_columns))
 estimator_path = classifier.export_saved_model(export_dir_base=args.output_model_path, serving_input_receiver_fn=serving_input_fn, as_text=True)
-logging.debug(estimator_path)
