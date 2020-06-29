@@ -1,0 +1,11 @@
+name: Preprocessing
+description: Preprocess the training dataset
+outputs:
+- {name: Preprocessed dataset, type: String}
+implementation:
+  container:
+    image: zeeros/ddos-classifier-preprocess
+    command: [
+      /usr/src/app/program.py,
+      --output1-path, {outputPath: Preprocessed dataset},
+    ]
