@@ -14,5 +14,4 @@ ENV PATH=/opt/conda/envs/$CONDA_ENV_NAME/bin:$PATH
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY metadata.json ./data
 COPY *.py ./
