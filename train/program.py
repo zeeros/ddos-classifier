@@ -48,7 +48,7 @@ def input_fn(df, batch_size=32):
 # Train the model
 logging.debug("Training model...")
 chunk_size = 10**10
-for train_df in np.split(df, range(chunk_size, math.ceil(train_sets.shape[0] / chunk_size) * chunk_size, chunk_size)):
+for train_df in np.split(df, range(chunk_size, math.ceil(df.shape[0] / chunk_size) * chunk_size, chunk_size)):
   classifier.train(input_fn=lambda: input_fn(train_df, training=True), steps=10**4)
 
 # Creating the directory where the output file will be created (the directory may or may not exist).
