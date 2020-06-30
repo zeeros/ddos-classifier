@@ -51,6 +51,7 @@ def input_fn(df, batch_size=32):
 logging.debug("Training model...")
 chunk_size = 10**10
 train_dfs = np.split(df, range(chunk_size, math.ceil(df.shape[0] / chunk_size) * chunk_size, chunk_size))
+del df
 round = 0
 for train_df in train_dfs:
     logging.debug("     > Round %i", len(train_dfs) - round)
