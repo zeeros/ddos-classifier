@@ -1,6 +1,5 @@
 import argparse
 import pandas as pd
-import math
 import tensorflow as tf
 import zipfile
 import json
