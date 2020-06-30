@@ -49,12 +49,12 @@ def input_fn(df, batch_size=32):
 
 # Train the model
 logging.debug("Training model...")
-chunk_size = 10**8
+chunk_size = 10**5
 train_dfs = np.split(df, range(chunk_size, math.ceil(df.shape[0] / chunk_size) * chunk_size, chunk_size))
 del df
-round = 0
+round = len(train_dfs)
 for train_df in train_dfs:
-    logging.debug("     > Round %i", len(train_dfs) - round)
+    logging.debug("     > Rounds to do: %i", round)
     classifier.train(input_fn=lambda: input_fn(train_df), steps=10**4)
     round += 1
 
