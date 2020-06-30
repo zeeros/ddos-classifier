@@ -49,14 +49,14 @@ def input_fn(df, batch_size=32):
 
 # Train the model
 logging.debug("Training model...")
-chunk_size = 10**5
+chunk_size = 10**8
 train_dfs = np.split(df, range(chunk_size, math.ceil(df.shape[0] / chunk_size) * chunk_size, chunk_size))
 del df
 round = len(train_dfs)
 for train_df in train_dfs:
     logging.debug("     > Rounds to do: %i", round)
     classifier.train(input_fn=lambda: input_fn(train_df), steps=10**4)
-    round += 1
+    round -= 1
 
 # Creating the directory where the output file will be created (the directory may or may not exist).
 Path(args.output_model_path).parent.mkdir(parents=True, exist_ok=True)
