@@ -156,4 +156,4 @@ df = load_dataset(
 )
 print(df.head())
 with open(args.output_dataset_path, 'w') as dataset_file:
-    df.to_csv(dataset_file)
+    df.to_csv(dataset_file, index=False)
