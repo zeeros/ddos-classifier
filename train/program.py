@@ -39,11 +39,8 @@ def input_fn(df, batch_size=32):
     '''
     An input function for training or evaluating
     '''
-    ftrs = dict(df[list(df.columns.values).remove("Label")
-    print("featrs lis")
-    print(ftrs)
     # Convert the inputs to a Dataset
-    dataset = tf.data.Dataset.from_tensor_slices((dict(df[ftrs]), df["Label"]))
+    dataset = tf.data.Dataset.from_tensor_slices((dict(df[[ x for x in list(df.columns.values) if x != "Label" ]]), df["Label"]))
     # Shuffle and repeat if you are in training mode
     dataset = dataset.shuffle(1000).repeat()
     return dataset.batch(batch_size)
