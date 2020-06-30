@@ -14,12 +14,9 @@ args = parser.parse_args()
 
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
-logging.debug(df.columns.values)
 
-print(df.head())
 # Get features
 feature_columns = [tf.feature_column.numeric_column(key=key) for key in df.keys()]
-logging.debug(feature_columns)
 # Get labels
 labels = ["BENIGN", "Syn", "UDPLag", "UDP", "LDAP", "MSSQL", "NetBIOS", "WebDDoS"]
 # Instantiate the model
@@ -42,8 +39,9 @@ def input_fn(df, batch_size=32):
     '''
     An input function for training or evaluating
     '''
+    ftrs = dict(df[list(df.columns.values).remove("Label")
     # Convert the inputs to a Dataset
-    dataset = tf.data.Dataset.from_tensor_slices((dict(df[list(df.columns.values).remove("Label")]), df["Label"]))
+    dataset = tf.data.Dataset.from_tensor_slices((dict(df[ftrs]), df["Label"]))
     # Shuffle and repeat if you are in training mode
     dataset = dataset.shuffle(1000).repeat()
     return dataset.batch(batch_size)
