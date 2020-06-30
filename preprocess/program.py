@@ -121,11 +121,11 @@ def load_dataset(csvs, zipfile_path, metadata_path, random_state):
     archive = zipfile.ZipFile(zipfile_path, 'r')
 
     feature_columns = get_features(archive, metadata)
-    logging.debug('Features %s', feature_columns)
+
     sets = []
     for file in archive.namelist():
         if any(file.endswith(t) for t in csvs):
-            logging.debug('     > Load %s', file)
+            logging.debug('     > Loading %s...', file)
             df = preprocess_dataframe(
                 df = pd.read_csv(
                     archive.open(file),
@@ -154,6 +154,6 @@ df = load_dataset(
     metadata_path = "/usr/src/app/data/metadata.json",
     random_state = 1
 )
-print(df.head())
+
 with open(args.output_dataset_path, 'w') as dataset_file:
     df.to_csv(dataset_file, index=False)
