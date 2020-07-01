@@ -8,6 +8,13 @@ RUN conda update conda && conda install "conda=4.8.3"
 # Activate conda environment
 COPY environment.yml .
 ENV CONDA_ENV_NAME conda-env
-RUN conda env create -n $CONDA_ENV_NAME -f environment.yml
-RUN echo "source activate $CONDA_ENV_NAME" > /etc/bashrc
+RUN conda env create -n $CONDA_ENV_NAME -f environment.yml && echo "source activate $CONDA_ENV_NAME" > /etc/bashrc
 ENV PATH=/opt/conda/envs/$CONDA_ENV_NAME/bin:$PATH
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+# Download the training dataset
+RUN wget -q -P /usr/src/app/data --timeout=1 --tries=0 --retry-connrefused  http://205.174.165.80/CICDataset/CICDDoS2019/Dataset/CSVs/CSV-01-12.zip
+
+COPY metadata.json ./data
+COPY *.py ./
