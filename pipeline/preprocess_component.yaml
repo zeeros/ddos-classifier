@@ -3,7 +3,7 @@ outputs:
 - {name: OutputDataset}
 implementation:
   container:
-    image: zeeros/ddos-classifier-preprocess
-    command: [python3, /usr/src/app/program.py,
+    image: zeeros/tf2-env
+    command: [python3, /usr/src/app/preprocess.py,
       --output-dataset-path, {outputPath: OutputDataset},
     ]
