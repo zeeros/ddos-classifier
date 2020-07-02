@@ -1,0 +1,13 @@
+name: Training
+inputs:
+- {name: Train dataset, type: String}
+outputs:
+- {name: Trained model, type: String}
+implementation:
+  container:
+    image: zeeros/ddos-classifier-test
+    command: [
+      python3,
+      /usr/src/app/test.py,
+      --input-model-path, {inputPath: Input model}
+    ]
