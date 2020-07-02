@@ -1,8 +1,6 @@
-name: Training
+name: Testing
 inputs:
-- {name: Train dataset, type: String}
-outputs:
-- {name: Trained model, type: String}
+- {name: Input model, type: String}
 implementation:
   container:
     image: zeeros/ddos-classifier-test
