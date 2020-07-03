@@ -61,7 +61,7 @@ def load_dataset(csvs, zipfile_path, metadata_path, random_state=None):
 
     dfs = []
     for file in archive.namelist():
-        if any(file.endswith(t) for t in test_csv):
+        if any(file.endswith(t) for t in csvs):
             logging.debug('     > Loading %s...', file)
             file_dfs = []
             for chunk in pd.read_csv(archive.open(file), dtype={85: str}, chunksize=chunk_size):
