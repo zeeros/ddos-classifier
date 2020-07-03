@@ -64,7 +64,7 @@ def load_dataset(csvs, zipfile_path, metadata_path, random_state=None):
         if any(file.endswith(t) for t in csvs):
             logging.debug('     > Loading %s...', file)
             file_dfs = []
-            for chunk in pd.read_csv(archive.open(file), dtype={85: str}, chunksize=chunk_size):
+            for chunk in pd.read_csv(archive.open(file), dtype={85: str}, chunksize=9**6):
                 df = __preprocess_dataframe(
                     chunk,
                     features=[fc.key.replace(" ", "_") for fc in feature_columns],
