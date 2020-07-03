@@ -82,10 +82,10 @@ parser = argparse.ArgumentParser(description='Training component for the DDoS cl
 parser.add_argument('--input-model-path', type=str, help='Path to the trained model')
 args = parser.parse_args()
 
-print(*Path(args.input_model_path).iterdir(), sep="\n")
+input_model_path = *Path(args.input_model_path).iterdir()
 
 # Load the DNN models
-model = tf.saved_model.load(args.input_model_path)
+model = tf.saved_model.load(input_model_path)
 
 df = load_dataset(
     csvs = ['Syn.csv', 'UDPLag.csv', 'UDP.csv', 'LDAP.csv', 'MSSQL.csv', 'NetBIOS.csv'],
