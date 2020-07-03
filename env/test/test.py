@@ -78,20 +78,20 @@ def load_dataset(csvs, zipfile_path, metadata_path, random_state=None):
                 "file": file,
                 "dataframe": file_dfs
             })
-    return pd.concat(dfs)
+    return dfs
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Training component for the DDoS classifier')
 parser.add_argument('--input-model-path', type=str, help='Path to the trained model')
 args = parser.parse_args()
 
-# Get the first fol
+# Get the only folder inside the path, containing the model
 input_model_path = args.input_model_path + "/" + os.listdir(args.input_model_path)[0]
 
 # Load the DNN models
 model = tf.saved_model.load(input_model_path)
 
-df = load_dataset(
+dfs = load_dataset(
     csvs = ['Syn.csv', 'UDPLag.csv', 'UDP.csv', 'LDAP.csv', 'MSSQL.csv', 'NetBIOS.csv'],
     zipfile_path = "/usr/src/app/data/CSV-03-11.zip",
     metadata_path = "/usr/src/app/data/metadata.json"
