@@ -82,6 +82,8 @@ parser = argparse.ArgumentParser(description='Training component for the DDoS cl
 parser.add_argument('--input-model-path', type=str, help='Path to the trained model')
 args = parser.parse_args()
 
+print(*Path(args.input_model_path).iterdir(), sep="\n")
+
 # Load the DNN models
 model = tf.saved_model.load(args.input_model_path)
 
