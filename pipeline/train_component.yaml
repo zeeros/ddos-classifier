@@ -6,9 +6,7 @@ outputs:
 implementation:
   container:
     image: zeeros/tf2-env
-    command: [
-      python3,
-      /usr/src/app/train.py,
+    command: [python3, /usr/src/app/train.py,
       --input-dataset-path, {inputPath: Train dataset},
       --output-model-path, {outputPath: Trained model},
     ]
