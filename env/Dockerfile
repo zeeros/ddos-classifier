@@ -13,3 +13,4 @@ ENV PATH=/opt/conda/envs/$CONDA_ENV_NAME/bin:$PATH
 
 # Workspace
 RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
