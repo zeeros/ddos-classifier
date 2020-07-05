@@ -97,6 +97,12 @@ dfs = load_dataset(
     metadata_path = "/usr/src/app/data/metadata.json"
 )
 
+def predict(x):
+  example = tf.train.Example()
+  example.features.feature["x"].float_list.value.extend([x])
+  return imported.signatures["predict"](
+    examples=tf.constant([example.SerializeToString()]))
+
 # Test the model
 metrics = []
 for file_df in dfs:

@@ -1,5 +1,7 @@
 * ANN for DDoS attacks detection
-- notebook.ipynb :: Includes preprocessijng, training, testing and
+- notebook.ipynb :: Includes preprocessing, training, testing and
                     model export
+- pipeline/ :: Code for compiling the pipeline with the required components
+- env/ :: Dockerfiles to build the images used by the components
 ** Dataset
 [[https://www.unb.ca/cic/datasets/ddos-2019.html][CICDDoS2019]]
