@@ -1,0 +1,8 @@
+* ANN for DDoS attacks detection - env
+For each Kubeflow pipeline component we use a different image
+- Dockerfile (base) :: Build a base image on which all other images
+     are built on
+- environment.yml :: Dependendencies for the conda environment,
+     installed when the base image is built
+- preprocess/, test/, train/ :: Build an image for specific
+     components, containing all the code and data required

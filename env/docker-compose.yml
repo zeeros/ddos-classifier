@@ -1,7 +1,0 @@
-version: "3"
-services:
-  ddos-classifier:
-    build: .
-    volumes:
-      - ./src:/usr/src/app/src
-      - ./data:/usr/src/app/data
