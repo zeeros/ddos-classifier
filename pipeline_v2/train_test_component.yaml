@@ -6,8 +6,8 @@ outputs:
 - {name: Trained model, type: String}
 implementation:
   container:
-    image: zeeros/ddos-classifier-train
-    command: [python3, /usr/src/app/train.py,
+    image: zeeros/ddos-classifier-train-test
+    command: [python3, /usr/src/app/train_test.py,
       --input-train-dataset-path, {inputPath: Train dataset},
       --input-test-dataset-path, {inputPath: Test dataset},
       --output-model-path, {outputPath: Trained model},
