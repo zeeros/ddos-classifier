@@ -1,0 +1,9 @@
+name: Preprocessing train dataset
+outputs:
+- {name: OutputDataset}
+implementation:
+  container:
+    image: zeeros/ddos-classifier-preprocess
+    command: [python3, /usr/src/app/preprocess.py,
+      --output-dataset-path, {outputPath: OutputDataset},
+    ]
