@@ -5,6 +5,7 @@ import math
 import zipfile
 import json
 import collections
+import logging
 
 
 def __preprocess_dataframe(df, features, metadata=None):
