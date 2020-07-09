@@ -5,4 +5,4 @@ RUN wget -q -P /usr/src/app/data --timeout=1 --tries=0 --retry-connrefused  http
 # Copy source code
 WORKDIR /usr/src/app
 COPY metadata.json ./data
-COPY preprocess_test.py ./
+COPY *.py ./
