@@ -8,6 +8,8 @@ import collections
 import logging
 
 
+logging.basicConfig(level=logging.DEBUG)
+
 def __preprocess_dataframe(df, features, metadata=None):
     """
     If metadata is passed, return also the labels
@@ -129,6 +131,7 @@ def load_dataset(zipfile_path, metadata_path, random_state, csvs=None):
 
     sets = []
     for file in archive.namelist():
+        logging.debug('     > File %s', file)
         # Load all the files if csvs parameter is None
         # otherwise check that the file is listed in csvs
         if csvs is None:
