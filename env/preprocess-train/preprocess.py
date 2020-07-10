@@ -125,7 +125,7 @@ def load_dataset(zipfile_path, metadata_path, random_state, csvs=None):
     logging.debug('Opening archive...')
     archive = zipfile.ZipFile(zipfile_path, 'r')
 
-    feature_columns = get_features(archive, metadata)
+    feature_columns = __get_features(archive, metadata)
 
     sets = []
     for file in archive.namelist():
