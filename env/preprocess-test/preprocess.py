@@ -133,7 +133,7 @@ def load_dataset(zipfile_path, metadata_path, random_state, csvs=None):
         # otherwise check that the file is listed in csvs
         if (csvs is None) or any(file.endswith(t) for t in csvs):
             logging.debug('     > Loading %s...', file)
-            df = preprocess_dataframe(
+            df = __preprocess_dataframe(
                 df = pd.read_csv(
                     archive.open(file),
                     dtype={85: str}
