@@ -48,7 +48,7 @@ def __get_features(archive, metadata):
         feature_columns.append(tf.feature_column.numeric_column(key=key))
     return feature_columns
 
-def load_dataset(zipfile_path, metadata_path, random_state, csvs=None):
+def load_dataset(zipfile_path, metadata_path, random_state, csvs=None, chunksize=None):
 
     logging.debug('Loading metadata...')
     with open(metadata_path) as metadata_file:
@@ -69,14 +69,27 @@ def load_dataset(zipfile_path, metadata_path, random_state, csvs=None):
             load_file = any(file.endswith(t) for t in csvs)
         if load_file:
             logging.debug('     > Loading %s...', file)
-            df = __preprocess_dataframe(
-                df = pd.read_csv(
-                    archive.open(file),
-                    dtype={85: str}
-                ),
-                features = [fc.key.replace(" ", "_") for fc in feature_columns],
-                metadata = metadata
-            )
+            # Load the entire csv file only if chunksize is not specified
+            if chunksize is None:
+                df = __preprocess_dataframe(
+                    df = pd.read_csv(
+                        archive.open(file),
+                        dtype={85: str}
+                    ),
+                    features = [fc.key.replace(" ", "_") for fc in feature_columns],
+                    metadata = metadata
+                )
+            else:
+                chunks = []
+                for chunk in pd.read_csv(archive.open(file), dtype={85: str}, chunksize=chunksize):
+                    df = __preprocess_dataframe(
+                        chunk,
+                        features = [fc.key.replace(" ", "_") for fc in feature_columns],
+                        metadata = metadata
+                    )
+                    chunks.append(df)
+                # Merge the chunks
+                df = pd.concat(chunks, ignore_index=True)
             sets.append(df)
     # Merge the dataframes into a single one and shuffle it, random_state assures reproducibility
     logging.debug('Merging and shuffling...')
