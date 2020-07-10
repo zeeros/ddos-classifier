@@ -44,7 +44,7 @@ def input_fn(df, training=True, batch_size=32):
     An input function for training or evaluating
     '''
     # Convert the inputs to a Dataset
-    dataset = tf.data.Dataset.from_tensor_slices((dict(df["features"]), df["labels"]))
+    dataset = tf.data.Dataset.from_tensor_slices((dict(df[[ x for x in list(df.columns.values) if x != "Label" ]]), df["Label"]))
     # Shuffle and repeat if you are in training mode
     if training:
       dataset = dataset.shuffle(1000).repeat()
