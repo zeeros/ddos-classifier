@@ -53,7 +53,7 @@ def input_fn(df, training=True, batch_size=32):
 # Train the model
 logging.debug("Training model...")
 chunk_size = 9**6
-train_dfs = np.split(train_df, range(chunk_size, math.ceil(df.shape[0] / chunk_size) * chunk_size, chunk_size))
+train_dfs = np.split(train_df, range(chunk_size, math.ceil(train_df.shape[0] / chunk_size) * chunk_size, chunk_size))
 del train_df
 round = len(train_dfs)
 for train_df in train_dfs:
@@ -64,7 +64,7 @@ for train_df in train_dfs:
 # Test the model
 logging.debug("Testing model...")
 #chunk_size = 9**6
-#test_dfs = np.split(test_df, range(chunk_size, math.ceil(df.shape[0] / chunk_size) * chunk_size, chunk_size))
+#test_dfs = np.split(test_df, range(chunk_size, math.ceil(test_df.shape[0] / chunk_size) * chunk_size, chunk_size))
 chunks = 10
 test_dfs = np.split(test_df, chunks)
 del test_df
