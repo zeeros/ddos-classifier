@@ -8,6 +8,8 @@ import collections
 import logging
 
 
+logging.basicConfig(level=logging.DEBUG)
+
 def __preprocess_dataframe(df, features, metadata=None):
     """
     If metadata is passed, return also the labels
@@ -46,76 +48,6 @@ def __get_features(archive, metadata):
         feature_columns.append(tf.feature_column.numeric_column(key=key))
     return feature_columns
 
-
-def load_data(data_path=".", train_csv=None, test_csv=None, chunk_size=10**10):
-    labels = ["BENIGN", "Syn", "UDPLag", "UDP", "LDAP", "MSSQL", "NetBIOS", "WebDDoS"]
-    LoadedData = collections.namedtuple("LoadedData", "feature_columns labels train_dfs test_dfs")
-
-    # Load metadata
-    with open(data_path + "/metadata.json") as metadata_file:
-        metadata = json.load(metadata_file)
-
-    train_dfs = None
-    feature_columns = None
-    if train_csv is not None:
-        train_archive = zipfile.ZipFile(data_path + "/CSV-01-12.zip", 'r')
-        # Feature columns describe how to use the input
-        feature_columns = __get_features(train_archive, metadata)
-        train_sets = []
-        for file in train_archive.namelist():
-            if any(file.endswith(t) for t in train_csv):
-                df = __preprocess_dataframe(
-                    df=pd.read_csv(
-                        train_archive.open(file),
-                        dtype={85: str}
-                    ),
-                    features=[fc.key.replace(" ", "_") for fc in feature_columns],
-                    metadata=metadata
-                )
-                # Load csv to dataframe
-                train_sets.append(df)
-        # Merge the dataframes into a single one and shuffle it, random_state assures reproducibility
-        train_sets = pd.concat(train_sets).sample(frac=1, random_state=1)
-        print("Number of rows: ", train_sets.shape[0])
-        # Split the dataframes in multiple chunks
-        train_chunks = np.split(train_sets,
-                                range(chunk_size, math.ceil(train_sets.shape[0] / chunk_size) * chunk_size, chunk_size))
-        del train_sets
-        train_dfs = []
-        for train_chunk in train_chunks:
-            train_dfs.append({
-                "labels": train_chunk.pop("Label"),
-                "features": train_chunk
-            })
-        del train_chunks
-
-    test_dfs = None
-    if test_csv is not None:
-        test_archive = zipfile.ZipFile(data_path + "/CSV-03-11.zip", 'r')
-        # Feature columns describe how to use the input
-        if feature_columns is None:
-            feature_columns = __get_features(test_archive, metadata)
-        test_dfs = []
-        for file in test_archive.namelist():
-            if any(file.endswith(t) for t in test_csv):
-                file_test_dfs = []
-                for chunk in pd.read_csv(test_archive.open(file), dtype={85: str}, chunksize=chunk_size):
-                    df = __preprocess_dataframe(
-                        chunk,
-                        features=[fc.key.replace(" ", "_") for fc in feature_columns],
-                        metadata=metadata
-                    )
-                    file_test_dfs.append({
-                        "labels": df.pop("Label"),
-                        "features": df
-                    })
-                test_dfs.append({
-                    "file": file,
-                    "dataframe": file_test_dfs
-                })
-
-    return LoadedData(feature_columns, labels, train_dfs, test_dfs)
-
 def load_dataset(zipfile_path, metadata_path, random_state, csvs=None):
 
     logging.debug('Loading metadata...')
@@ -131,7 +63,11 @@ def load_dataset(zipfile_path, metadata_path, random_state, csvs=None):
     for file in archive.namelist():
         # Load all the files if csvs parameter is None
         # otherwise check that the file is listed in csvs
-        if (csvs is None) or any(file.endswith(t) for t in csvs):
+        if csvs is None:
+            load_file = file.endswith(".csv")
+        else:
+            load_file = any(file.endswith(t) for t in csvs)
+        if load_file:
             logging.debug('     > Loading %s...', file)
             df = __preprocess_dataframe(
                 df = pd.read_csv(
