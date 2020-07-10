@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.DEBUG)
 parser = argparse.ArgumentParser(description='Training component for the DDoS classifier')
 parser.add_argument('--input-train-dataset-path', type=str, help='Path to the preprocessed training dataset')
 parser.add_argument('--input-test-dataset-path', type=str, help='Path to the preprocessed testing dataset')
-parser.add_argument('--output-test-model-path', type=str, help='Path to the trained model')
+parser.add_argument('--output-model-path', type=str, help='Path to the trained model')
 args = parser.parse_args()
 
 # Get dataframe
