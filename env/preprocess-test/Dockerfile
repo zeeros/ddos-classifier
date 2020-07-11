@@ -3,5 +3,4 @@ FROM zeeros/ddos-classifier-base:latest
 # Download the training dataset
 RUN wget -q -P /usr/src/app/data --timeout=1 --tries=0 --retry-connrefused  http://205.174.165.80/CICDataset/CICDDoS2019/Dataset/CSVs/CSV-03-11.zip
 # Copy source code
-WORKDIR /usr/src/app
-COPY preprocess_test.py ./
+COPY preprocess_test.py /usr/src/app/
