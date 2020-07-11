@@ -10,3 +10,6 @@ RUN conda env create -n $CONDA_ENV_NAME -f environment.yml && echo "source activ
 ENV PATH=/opt/conda/envs/$CONDA_ENV_NAME/bin:$PATH
 # Workspace
 RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY metadata.json ./data
+COPY preprocess.py ./
