@@ -1,4 +1,4 @@
-name: Preprocessing train dataset
+name: Preprocessing train
 outputs:
 - {name: OutputDataset}
 implementation:

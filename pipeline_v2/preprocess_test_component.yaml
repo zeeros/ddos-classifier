@@ -1,4 +1,4 @@
-name: Preprocessing test dataset
+name: Preprocessing test
 outputs:
 - {name: OutputDataset}
 implementation:
