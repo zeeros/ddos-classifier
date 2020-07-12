@@ -83,7 +83,7 @@ def load_dataset(zipfile_path, metadata_path, random_state, csvs=None, chunksize
             else:
                 for chunk in pd.read_csv(archive.open(file), dtype={85: str}, chunksize=chunksize):
                     df = __preprocess_dataframe(
-                        chunk,
+                        df = chunk,
                         features = [fc.key.replace(" ", "_") for fc in feature_columns],
                         metadata = metadata
                     )

@@ -21,7 +21,7 @@ df = preprocess.load_dataset(
     metadata_path = "/usr/src/app/data/metadata.json",
     random_state = 1,
     csvs = ['UDPLag.csv', 'Syn.csv', 'DrDoS_UDP.csv', 'DrDoS_NetBIOS.csv', 'DrDoS_MSSQL.csv', 'DrDoS_LDAP.csv'],
-    chunksize=8**6
+    chunksize=7**6
 )
 
 with open(args.output_dataset_path, 'w') as dataset_file:
