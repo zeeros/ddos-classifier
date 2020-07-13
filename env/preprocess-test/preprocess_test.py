@@ -19,9 +19,8 @@ Path(args.output_dataset_path).parent.mkdir(parents=True, exist_ok=True)
 df = preprocess.load_dataset(
     zipfile_path = "/usr/src/app/data/CSV-03-11.zip",
     metadata_path = "/usr/src/app/data/metadata.json",
-    random_state = 1,
     csvs = ['Syn.csv', 'UDPLag.csv', 'UDP.csv', 'LDAP.csv', 'MSSQL.csv', 'NetBIOS.csv'],
-    chunksize=7**6
+    chunksize=8**6
 )
 
 with open(args.output_dataset_path, 'w') as dataset_file:
