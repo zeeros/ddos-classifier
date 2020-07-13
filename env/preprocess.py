@@ -48,7 +48,7 @@ def __get_features(archive, metadata):
         feature_columns.append(tf.feature_column.numeric_column(key=key))
     return feature_columns
 
-def load_dataset(zipfile_path, metadata_path, random_state, csvs=None, chunksize=None, shuffle=True):
+def load_dataset(zipfile_path, metadata_path, random_state=None, csvs=None, chunksize=None):
 
     logging.debug('Loading metadata...')
     with open(metadata_path) as metadata_file:
@@ -91,7 +91,7 @@ def load_dataset(zipfile_path, metadata_path, random_state, csvs=None, chunksize
     # Merge the dataframes into a single one and shuffle it, random_state assures reproducibility
     logging.debug('Merging and shuffling...')
     df = pd.concat(sets, ignore_index=True)
-    if shuffle:
-        return df.sample(frac=1, random_state=random_state)
-    else:
+    if random_state is None:
         return df
+    else:
+        return df.sample(frac=1, random_state=random_state)
