@@ -1,5 +1,0 @@
-* ANN for DDoS attacks detection - pipeline
-- compiler.py :: Build a pipeline definition, export it as a zip file
-                 to be uploaded on the Kubeflow Pipeline dashboard
-- *_component.yaml :: Component definition (container image,
-     input/output parameters)
