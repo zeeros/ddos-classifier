@@ -4,5 +4,6 @@ For each Kubeflow pipeline component we use a different image
      are built on
 - environment.yml :: Dependendencies for the conda environment,
      installed when the base image is built
-- preprocess/, test/, train/ :: Build an image for specific
-     components, containing all the code and data required
+- preprocess-*/, test/, train/ :: Build an image for specific
+     components with the required source code. When /preprocess-*/
+     components are built the related dataset is also downloaded
