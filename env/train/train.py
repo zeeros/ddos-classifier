@@ -48,37 +48,33 @@ def input_fn(df, batch_size=32):
     return dataset.batch(batch_size)
 
 def run_config(hparams):
-    '''
-    Run a specific configuration
-    '''
-    classifier = tf.estimator.DNNClassifier(
-        hidden_units=hparams['HIDDEN_UNITS'],
-        feature_columns=feature_columns,
-        n_classes=len(labels),
-        label_vocabulary=labels,
-        batch_norm=hparams['BATCH_NORM'],
-        optimizer=lambda: tf.keras.optimizers.Adam(
-            learning_rate=tf.compat.v1.train.exponential_decay(
-            learning_rate=0.1,
-            global_step=tf.compat.v1.train.get_global_step(),
-            decay_steps=10000,
-            decay_rate=0.96)
-        ),
-        config=tf.estimator.RunConfig(
-            save_summary_steps=10**3,
-            tf_random_seed=9,
-            log_step_count_steps=10**5
-        )
-    )
-    train_df_count = int(round*(80/100))
-    # Train over #train_df_count dataframes
-    for train_df in train_dfs[:train_df_count]:
-        classifier.train(input_fn=lambda: input_fn(train_df, training=True), steps=10**4)
-    accuracies = []
-    # Evaluate over the remaining dataframes
-    for evaluate_df in train_dfs[train_df_count:]:
-        accuracies.append(classifier.evaluate(input_fn=lambda: input_fn(evaluate_df, training=False))['accuracy'])
-    return {
+  classifier = tf.estimator.DNNClassifier(
+      hidden_units=[60, 30, 20],
+      feature_columns=feature_columns,
+      n_classes=len(labels),
+      label_vocabulary=labels,
+      batch_norm=hparams['BATCH_NORM'],
+      optimizer=lambda: tf.keras.optimizers.Adam(
+          learning_rate=tf.compat.v1.train.exponential_decay(
+              learning_rate=hparams['LEARNING_RATE'],
+              global_step=tf.compat.v1.train.get_global_step(),
+              decay_steps=10000,
+              decay_rate=0.96)
+      ),
+      config=tf.estimator.RunConfig(
+          tf_random_seed=9,
+          log_step_count_steps=10**5
+      )
+  )
+  train_df_count = int(round*(80/100))
+  # Train over #train_df_count dataframes
+  for train_df in train_dfs[:train_df_count]:
+    classifier.train(input_fn=lambda: input_fn(train_df, training=True), steps=10**4)
+  accuracies = []
+  # Evaluate over the remaining dataframes
+  for evaluate_df in train_dfs[train_df_count:]:
+    accuracies.append(classifier.evaluate(input_fn=lambda: input_fn(evaluate_df, training=False))['accuracy'])
+  return {
         "hparams": hparams,
         "classifier": classifier,
         "accuracy": sum(accuracies)/len(accuracies)
