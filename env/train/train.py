@@ -92,28 +92,35 @@ del df
 round = len(train_dfs)
 
 session_num = 0
-session_run = None
+session_runs = []
+best_run = None
 
 BATCH_NORM = [True, False]
-HIDDEN_UNITS = [[60, 30, 20], [20, 10]]
+LEARNING_RATE = [0.1, 0.3]
 for batch_norm in BATCH_NORM:
-  for hidden_units in HIDDEN_UNITS:
+  for learning_rate in LEARNING_RATE:
     hparams = {}
     hparams['BATCH_NORM'] = batch_norm,
-    hparams['HIDDEN_UNITS'] = hidden_units
+    hparams['LEARNING_RATE'] = learning_rate
     logging.debug("Session #%d" % session_num)
     logging.debug('hparams: %s', hparams)
-    model = run_config(hparams)
-    if classifier is None or session_run["accuracy"] < model["accuracy"]:
-        # Set current model as the best run
-        session_run = model
+    run = run_config(hparams)
+    session_runs.append(run)
+    if best_run is None or best_run["accuracy"] < run["accuracy"]:
+        # Set current model as the classifier to export
+        best_run = run
     session_num += 1
+
+logging.debug("Session runs:")
+logging.debug(session_runs)
+logging.debug("Best run:")
+logging.debug(best_run)
 
 # Creating the directory where the output file will be created (the directory may or may not exist).
 Path(args.output_model_path).parent.mkdir(parents=True, exist_ok=True)
 
 # Save the model
 logging.debug("Saving model...")
-classifier = session_run["classifier"]
+classifier = best_run["classifier"]
 serving_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(tf.feature_column.make_parse_example_spec(feature_columns))
 estimator_path = classifier.export_saved_model(export_dir_base=args.output_model_path, serving_input_receiver_fn=serving_input_fn)
