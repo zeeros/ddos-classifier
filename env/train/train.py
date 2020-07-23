@@ -97,7 +97,7 @@ LEARNING_RATE = [0.1, 0.3]
 for batch_norm in BATCH_NORM:
   for learning_rate in LEARNING_RATE:
     hparams = {}
-    hparams['BATCH_NORM'] = batch_norm,
+    hparams['BATCH_NORM'] = batch_norm
     hparams['LEARNING_RATE'] = learning_rate
     logging.debug("Session #%d" % session_num)
     logging.debug('hparams: %s', hparams)
@@ -108,9 +108,11 @@ for batch_norm in BATCH_NORM:
         best_run = run
     session_num += 1
 
-logging.debug("Session runs:")
+# Train the model
+logging.debug("Training end")
+logging.debug("- Session runs:")
 logging.debug(session_runs)
-logging.debug("Best run:")
+logging.debug("- Best run:")
 logging.debug(best_run)
 
 # Creating the directory where the output file will be created (the directory may or may not exist).
