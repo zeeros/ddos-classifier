@@ -54,7 +54,8 @@ def run_config(hparams):
       feature_columns=feature_columns,
       n_classes=len(labels),
       label_vocabulary=labels,
-      batch_norm=hparams['BATCH_NORM'],
+      batch_norm=True,
+      dropout=hparams['DROPOUT'],
       optimizer=lambda: tf.keras.optimizers.Adam(
           learning_rate=tf.compat.v1.train.exponential_decay(
               learning_rate=hparams['LEARNING_RATE'],
@@ -92,12 +93,12 @@ session_num = 0
 session_runs = []
 best_run = None
 
-BATCH_NORM = [True, False]
+DROPOUT = [0.1, 0.2]
 LEARNING_RATE = [0.1, 0.3]
-for batch_norm in BATCH_NORM:
+for dropout in DROPOUT:
   for learning_rate in LEARNING_RATE:
     hparams = {}
-    hparams['BATCH_NORM'] = batch_norm
+    hparams['DROPOUT'] = dropout
     hparams['LEARNING_RATE'] = learning_rate
     logging.debug("Session #%d" % session_num)
     logging.debug('hparams: %s', hparams)
