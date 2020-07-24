@@ -21,21 +21,6 @@ df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 feature_columns = [tf.feature_column.numeric_column(key=key) for key in df.keys() if key != "Label" ]
 # Get labels
 labels = ["BENIGN", "Syn", "UDPLag", "UDP", "LDAP", "MSSQL", "NetBIOS", "WebDDoS"]
-# Instantiate the model
-classifier = tf.estimator.DNNClassifier(
-        hidden_units=[60, 30, 20],
-        feature_columns=feature_columns,
-        n_classes=len(labels),
-        label_vocabulary=labels,
-        batch_norm=True,
-        optimizer=lambda: tf.keras.optimizers.Adam(
-            learning_rate=tf.compat.v1.train.exponential_decay(
-                learning_rate=0.1,
-                global_step=tf.compat.v1.train.get_global_step(),
-                decay_steps=10000,
-                decay_rate=0.96)
-        )
-)
 
 def input_fn(df, training, batch_size=32):
     '''
