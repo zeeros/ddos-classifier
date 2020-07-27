@@ -18,7 +18,7 @@ args = parser.parse_args()
 
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
-model = tf.saved_model.load(input_model_path)
+model = tf.saved_model.load(args.input_model_path)
 
 def predict(model, df):
   """
