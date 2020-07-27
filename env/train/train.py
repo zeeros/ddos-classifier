@@ -10,12 +10,15 @@ logging.basicConfig(level=logging.DEBUG)
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Training component for the DDoS classifier')
+parser.add_argument('--hidden-layers', type=str, default='60,30,20', help='Path to the preprocessed dataset')
 parser.add_argument('--input-dataset-path', type=str, help='Path to the preprocessed dataset')
 parser.add_argument('--output-model-path', type=str, help='Path to the trained model')
 args = parser.parse_args()
 
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
+# Get hidden layers
+hidden_units = args.hidden_layers.split(",")
 
 # Get features
 feature_columns = [tf.feature_column.numeric_column(key=key) for key in df.keys() if key != "Label" ]
@@ -35,7 +38,7 @@ def input_fn(df, training, batch_size=32):
 
 def run_config(hparams):
   classifier = tf.estimator.DNNClassifier(
-      hidden_units=[60, 30, 20],
+      hidden_units=hidden_units,
       feature_columns=feature_columns,
       n_classes=len(labels),
       label_vocabulary=labels,

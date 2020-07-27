@@ -11,6 +11,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Testing component for the DDoS classifier')
+parser.add_argument('--hidden-layers', type=str, help='Hidden layers description')
 parser.add_argument('--input-dataset-path', type=str, help='Path to the preprocessed dataset')
 parser.add_argument('--input-model-path', type=str, help='Path to the trained model')
 parser.add_argument('--output-model-path', type=str, help='Path to the trained model')

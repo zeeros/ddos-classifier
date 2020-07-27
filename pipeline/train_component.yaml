@@ -1,5 +1,6 @@
 name: Training
 inputs:
+- {name: Hidden layers, type: String}
 - {name: Train dataset, type: String}
 outputs:
 - {name: Trained model, type: String}
@@ -7,6 +8,7 @@ implementation:
   container:
     image: zeeros/ddos-classifier-train
     command: [python3, /usr/src/app/train.py,
+      --hidden-layers, {input: Hidden layers},
       --input-dataset-path, {inputPath: Train dataset},
       --output-model-path, {outputPath: Trained model},
     ]
