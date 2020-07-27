@@ -8,7 +8,7 @@ implementation:
   container:
     image: zeeros/ddos-classifier-train
     command: [python3, /usr/src/app/train.py,
-      --hidden-layers, {input: Hidden layers},
+      --hidden-layers, {inputValue: Hidden layers},
       --input-dataset-path, {inputPath: Train dataset},
       --output-model-path, {outputPath: Trained model},
     ]
