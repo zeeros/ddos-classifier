@@ -9,6 +9,5 @@ implementation:
     image: zeeros/ddos-classifier-test
     command: [python3, /usr/src/app/test.py,
       --input-dataset-path, {inputPath: Test dataset},
-      --input-model-path, {inputPath: Trained model},
-      --output-model-path, {outputPath: Trained model},
+      --input-model-path, {inputPath: Trained model}
     ]

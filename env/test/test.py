@@ -13,8 +13,12 @@ logging.basicConfig(level=logging.DEBUG)
 parser = argparse.ArgumentParser(description='Testing component for the DDoS classifier')
 parser.add_argument('--input-dataset-path', type=str, help='Path to the preprocessed dataset')
 parser.add_argument('--input-model-path', type=str, help='Path to the trained model')
-parser.add_argument('--output-model-path', type=str, help='Path to the trained model')
 args = parser.parse_args()
+
+# Display folder content
+import os
+os.listdir(args.input_dataset_path) # returns list
+os.listdir(args.input_model_path) # returns list
 
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
@@ -47,11 +51,3 @@ metrics = sklearn.metrics.classification_report(y_test, y_pred)
 
 logging.debug("Metrics")
 logging.debug(metrics)
-
-# Creating the directory where the output file will be created (the directory may or may not exist).
-Path(args.output_model_path).parent.mkdir(parents=True, exist_ok=True)
-
-# Save the model
-logging.debug("Saving model...")
-serving_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(tf.feature_column.make_parse_example_spec(feature_columns))
-estimator_path = classifier.export_saved_model(export_dir_base=args.output_model_path, serving_input_receiver_fn=serving_input_fn, experimental_mode=ModeKeys.EVAL)
