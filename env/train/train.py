@@ -16,7 +16,7 @@ parser.add_argument('--output-model-path', type=str, help='Path to the trained m
 args = parser.parse_args()
 
 # Get dataframe
-df = pd.read_csv(args.input_dataset_path, dtype={85: str}, nrows=1000)
+df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 # Get hidden layers
 hidden_units = args.hidden_layers.split(",")
 
@@ -81,8 +81,10 @@ session_num = 0
 session_runs = []
 best_run = None
 
-DROPOUT = [0.1, 0.2]
-LEARNING_RATE = [0.1, 0.3]
+#DROPOUT = [0.1, 0.2]
+DROPOUT = [0.2]
+#LEARNING_RATE = [0.1, 0.3]
+LEARNING_RATE = [0.5]
 for dropout in DROPOUT:
   for learning_rate in LEARNING_RATE:
     hparams = {}
