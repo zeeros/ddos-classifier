@@ -25,6 +25,7 @@ import os
 logging.debug("Model path")
 modelpath = args.input_model_path.replace("inputs","outputs")
 logging.debug(modelpath)
+logging.debug(os.listdir(args.input_model_path))
 
 model = tf.saved_model.load(modelpath)
 
