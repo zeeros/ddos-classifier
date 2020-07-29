@@ -23,7 +23,7 @@ df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 # Display folder content
 import os
 logging.debug("Model path")
-modelpath = args.input_model_path.replace("inputs","utputs")
+modelpath = args.input_model_path.replace("inputs","outputs")
 logging.debug(modelpath)
 
 model = tf.saved_model.load(modelpath)
