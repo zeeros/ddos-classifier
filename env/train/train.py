@@ -36,13 +36,14 @@ def input_fn(df, training, batch_size=32):
       dataset = dataset.shuffle(1000).repeat()
     return dataset.batch(batch_size)
 
-def run_config(hparams):
+def run_config(hparams, model_name):
   classifier = tf.estimator.DNNClassifier(
       hidden_units=hidden_units,
       feature_columns=feature_columns,
       n_classes=len(labels),
       label_vocabulary=labels,
       batch_norm=True,
+      model_dir='/tmp/'+model_name,
       dropout=hparams['DROPOUT'],
       optimizer=lambda: tf.keras.optimizers.Adam(
           learning_rate=tf.compat.v1.train.exponential_decay(
@@ -92,7 +93,7 @@ for dropout in DROPOUT:
     hparams['LEARNING_RATE'] = learning_rate
     logging.debug("Session #%d" % session_num)
     logging.debug('hparams: %s', hparams)
-    run = run_config(hparams)
+    run = run_config(hparams=hparams, model_name="model"+session_num)
     session_runs.append(run)
     if best_run is None or best_run["accuracy"] < run["accuracy"]:
         # Set current model as the classifier to export
