@@ -5,6 +5,7 @@ import pandas as pd
 import tensorflow as tf
 from pathlib import Path
 import logging
+import os
 from sklearn.metrics import classification_report
 
 logging.basicConfig(level=logging.DEBUG)
@@ -20,16 +21,10 @@ logging.debug("Testing model...")
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 
-# Display folder content
-import os
-model_path = args.input_model_path
-#model_folder = os.listdir(args.input_model_path)[0]
-#logging.debug("Model path")
-#logging.debug(model_path)
-#logging.debug("Model folder")
-#logging.debug(model_path + "/" + model_folder)
+# Get the only folder inside the path, containing the model
+input_model_path = args.input_model_path + "/" + os.listdir(args.input_model_path)[0]
 
-model = tf.saved_model.load(model_path)
+model = tf.saved_model.load(input_model_path)
 
 def predict(model, df):
   """
