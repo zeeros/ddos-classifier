@@ -22,9 +22,12 @@ df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 
 # Display folder content
 import os
-model_path = args.input_model_path+"/"+os.listdir(args.input_model_path)[0]
+model_path = args.input_model_path
+model_folder = os.listdir(args.input_model_path)[0]
 logging.debug("Model path")
 logging.debug(model_path)
+logging.debug("Model folder")
+logging.debug(model_path + "/" + model_folder)
 
 model = tf.saved_model.load(model_path)
 
