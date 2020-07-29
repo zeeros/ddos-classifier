@@ -17,7 +17,7 @@ args = parser.parse_args()
 
 # Display folder content
 import os
-os.listdir(args.input_dataset_path) # returns list
+#os.listdir(args.input_dataset_path) # returns list
 os.listdir(args.input_model_path) # returns list
 
 # Get dataframe
