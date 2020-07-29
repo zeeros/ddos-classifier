@@ -15,13 +15,16 @@ parser.add_argument('--input-dataset-path', type=str, help='Path to the preproce
 parser.add_argument('--input-model-path', type=str, help='Path to the trained model')
 args = parser.parse_args()
 
-# Display folder content
-import os
-#os.listdir(args.input_dataset_path) # returns list
-os.listdir(args.input_model_path) # returns list
+logging.debug("Testing model...")
 
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
+
+# Display folder content
+import os
+logging.debug(df.head())
+logging.debug(os.listdir(args.input_model_path))
+
 model = tf.saved_model.load(args.input_model_path)
 
 def predict(model, df):
