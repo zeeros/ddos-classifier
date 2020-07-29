@@ -22,10 +22,11 @@ df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 
 # Display folder content
 import os
-logging.debug(df.head())
-logging.debug(os.listdir(args.input_model_path))
+logging.debug("Model path")
+modelpath = args.input_model_path.replace("inputs","utputs")
+logging.debug(modelpath)
 
-model = tf.saved_model.load(args.input_model_path)
+model = tf.saved_model.load(modelpath)
 
 def predict(model, df):
   """
