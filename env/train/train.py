@@ -36,14 +36,14 @@ def input_fn(df, training, batch_size=32):
       dataset = dataset.shuffle(1000).repeat()
     return dataset.batch(batch_size)
 
-def run_config(hparams, model_name):
+def run_config(hparams, model_dir):
   classifier = tf.estimator.DNNClassifier(
       hidden_units=hidden_units,
       feature_columns=feature_columns,
       n_classes=len(labels),
       label_vocabulary=labels,
       batch_norm=True,
-      model_dir='/tmp/'+model_name,
+      model_dir=model_dir,
       dropout=hparams['DROPOUT'],
       optimizer=lambda: tf.keras.optimizers.Adam(
           learning_rate=tf.compat.v1.train.exponential_decay(
@@ -93,7 +93,7 @@ for dropout in DROPOUT:
     hparams['LEARNING_RATE'] = learning_rate
     logging.debug("Session #%d" % session_num)
     logging.debug('hparams: %s', hparams)
-    run = run_config(hparams=hparams, model_name="model"+str(session_num))
+    run = run_config(hparams=hparams, model_dir=args.output_model_path+"/"+str(session_num))
     session_runs.append(run)
     if best_run is None or best_run["accuracy"] < run["accuracy"]:
         # Set current model as the classifier to export
@@ -114,6 +114,6 @@ Path(args.output_model_path).parent.mkdir(parents=True, exist_ok=True)
 logging.debug("Saving model...")
 classifier = best_run["classifier"]
 serving_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(tf.feature_column.make_parse_example_spec(feature_columns))
-estimator_path = classifier.export_saved_model(export_dir_base=args.output_model_path, serving_input_receiver_fn=serving_input_fn)
+estimator_path = classifier.export_saved_model(export_dir_base=args.output_model_path+"/model", serving_input_receiver_fn=serving_input_fn)
 logging.debug("- Estimator path")
 logging.debug(estimator_path)
