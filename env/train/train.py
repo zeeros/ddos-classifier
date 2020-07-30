@@ -93,7 +93,7 @@ for dropout in DROPOUT:
     hparams['LEARNING_RATE'] = learning_rate
     logging.debug("Session #%d" % session_num)
     logging.debug('hparams: %s', hparams)
-    run = run_config(hparams=hparams, model_name="model"+session_num)
+    run = run_config(hparams=hparams, model_name="model"+str(session_num))
     session_runs.append(run)
     if best_run is None or best_run["accuracy"] < run["accuracy"]:
         # Set current model as the classifier to export
