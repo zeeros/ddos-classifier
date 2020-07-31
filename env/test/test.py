@@ -22,7 +22,7 @@ logging.debug("Testing model...")
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 
 # Get the only folder inside the path, containing the model
-input_model_path = os.listdir(args.input_model_path + "/" + os.listdir(args.input_model_path)[0])[0]
+input_model_path = args.input_model_path + "/" + os.listdir(args.input_model_path + "/" + os.listdir(args.input_model_path)[0])[0]
 logging.debug("PATH")
 logging.debug(os.listdir(input_model_path))
 
