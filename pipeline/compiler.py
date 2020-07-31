@@ -16,12 +16,18 @@ test = kfp.components.load_component_from_file(os.path.join('test_component.yaml
     name='DDoS Attacks Classifier',
     description='End-to-end training of a traffic classifier'
 )
-def pipeline():
-    preproc_train_task = preprocess_train_()
+def pipeline(hidden_layers_1: str = '60,30,20', hidden_layers_2: str = '60,40,30,20'):
+    preproc_train_task = preprocess_train()
     preproc_train_task.set_memory_request('10G')
     preproc_test_task = preprocess_test()
     preproc_test_task.set_memory_request('10G')
-    train_task = train(preproc_train_task.output)
+    train_task = train(hidden_layers_1, preproc_train_task.output)
+    train_task.set_memory_request('10G')
+    train_task_2 = train(hidden_layers_2, preproc_train_task.output)
+    train_task_2.set_memory_request('10G')
     test_task = test(preproc_test_task.output, train_task.output)
+    test_task.set_memory_request('5G')
+    test_task_2 = test(preproc_test_task.output, train_task_2.output)
+    test_task_2.set_memory_request('5G')
 
 kfp.compiler.Compiler().compile(pipeline, 'pipeline.zip')
