@@ -82,10 +82,8 @@ session_num = 0
 session_runs = []
 best_run = None
 
-#DROPOUT = [0.1, 0.2]
-DROPOUT = [0.2]
-#LEARNING_RATE = [0.1, 0.3]
-LEARNING_RATE = [0.8]
+DROPOUT = [0.1, 0.2]
+LEARNING_RATE = [0.1, 0.3]
 for dropout in DROPOUT:
   for learning_rate in LEARNING_RATE:
     hparams = {}
