@@ -7,6 +7,7 @@ from pathlib import Path
 import logging
 import os
 from sklearn.metrics import classification_report
+import random
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -22,14 +23,8 @@ logging.debug("Testing model...")
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 
 # Get the only folder inside the path, containing the model
-logging.debug("args.input_model_path")
-logging.debug(args.input_model_path)
-logging.debug("model_folder")
 model_folder = os.listdir(args.input_model_path+"/model")[0]
-logging.debug(model_folder)
 input_model_path = args.input_model_path+"/model/"+model_folder
-logging.debug("input_model_path")
-logging.debug(input_model_path)
 model = tf.saved_model.load(input_model_path)
 
 def predict(model, df):
