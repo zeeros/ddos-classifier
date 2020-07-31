@@ -27,7 +27,7 @@ logging.debug(args.input_model_path)
 logging.debug("model_folder")
 model_folder = os.listdir(args.input_model_path+"/model")[0]
 logging.debug(model_folder)
-input_model_path = os.listdir(args.input_model_path)+"/model/"+model_folder
+input_model_path = args.input_model_path+"/model/"+model_folder
 logging.debug("input_model_path")
 logging.debug(input_model_path)
 model = tf.saved_model.load(input_model_path)
