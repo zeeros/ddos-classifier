@@ -50,7 +50,7 @@ for i in random.sample(range(0, len(df)), k=10**3):
   y_test.append(df['Label'].iloc[i])
   y_pred.append(predict(model, df[features_name].iloc[i]))
 
-metrics = sklearn.metrics.classification_report(y_test, y_pred)
+metrics = classification_report(y_test, y_pred)
 
 logging.debug("Metrics")
 logging.debug(metrics)
