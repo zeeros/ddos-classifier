@@ -7,6 +7,12 @@ import collections
 import logging
 import preprocess
 from pathlib import Path
+import time
+import datetime
+
+logging.basicConfig(level=logging.DEBUG)
+start = time.time()
+logging.debug('START: {t}'.format(t=datetime.datetime.now()))
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Preprocessing for testing component')
@@ -25,3 +31,8 @@ df = preprocess.load_dataset(
 
 with open(args.output_dataset_path, 'w') as dataset_file:
     df.to_csv(dataset_file, index=False)
+
+end = time.time()
+elapsed_time = (end - start)
+logging.debug('Preprocessing time: {t}'.format(t=datetime.timedelta(seconds=elapsed_time)))
+logging.debug('END: {t}'.format(t=datetime.datetime.now()))

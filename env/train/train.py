@@ -5,8 +5,13 @@ import pandas as pd
 import tensorflow as tf
 from pathlib import Path
 import logging
+import time
+import datetime
+
 
 logging.basicConfig(level=logging.DEBUG)
+start = time.time()
+logging.debug('START: {t}'.format(t=datetime.datetime.now()))
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Training component for the DDoS classifier')
@@ -115,3 +120,8 @@ serving_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(t
 estimator_path = classifier.export_saved_model(export_dir_base=args.output_model_path+"/model", serving_input_receiver_fn=serving_input_fn)
 logging.debug("- Estimator path")
 logging.debug(estimator_path)
+
+end = time.time()
+elapsed_time = (end - start)
+logging.debug('Training time: {t}'.format(t=datetime.timedelta(seconds=elapsed_time)))
+logging.debug('END: {t}'.format(t=datetime.datetime.now()))

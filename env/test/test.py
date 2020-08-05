@@ -8,8 +8,12 @@ import logging
 import os
 from sklearn.metrics import classification_report
 import random
+import time
+import datetime
 
 logging.basicConfig(level=logging.DEBUG)
+start = time.time()
+logging.debug('START: {t}'.format(t=datetime.datetime.now()))s
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Testing component for the DDoS classifier')
@@ -54,3 +58,8 @@ metrics = classification_report(y_test, y_pred)
 
 logging.debug("Metrics")
 logging.debug(metrics)
+
+end = time.time()
+elapsed_time = (end - start)
+logging.debug('Testing time: {t}'.format(t=datetime.timedelta(seconds=elapsed_time)))
+logging.debug('END: {t}'.format(t=datetime.datetime.now()))
