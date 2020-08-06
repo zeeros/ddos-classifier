@@ -13,7 +13,7 @@ import datetime
 
 logging.basicConfig(level=logging.DEBUG)
 start = time.time()
-logging.debug('START: {t}'.format(t=datetime.datetime.now()))s
+logging.debug('START: {t}'.format(t=datetime.datetime.now()))
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Testing component for the DDoS classifier')
