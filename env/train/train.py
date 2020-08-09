@@ -15,7 +15,7 @@ logging.debug('START: {t}'.format(t=datetime.datetime.now()))
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Training component for the DDoS classifier')
-parser.add_argument('--hidden-layers', type=str, default='60,30,20', help='Path to the preprocessed dataset')
+parser.add_argument('--hidden-layers', type=str, default='', help='Path to the preprocessed dataset')
 parser.add_argument('--input-dataset-path', type=str, help='Path to the preprocessed dataset')
 parser.add_argument('--output-model-path', type=str, help='Path to the trained model')
 args = parser.parse_args()
@@ -23,7 +23,10 @@ args = parser.parse_args()
 # Get dataframe
 df = pd.read_csv(args.input_dataset_path, dtype={85: str})
 # Get hidden layers
-hidden_units = args.hidden_layers.split(",")
+if args.hidden_layers == "":
+    HIDDEN_UNITS = [[60, 30, 20], [60, 40, 30, 20]]
+else:
+    HIDDEN_UNITS = [args.hidden_layers.split(",")]
 
 # Get features
 feature_columns = [tf.feature_column.numeric_column(key=key) for key in df.keys() if key != "Label" ]
@@ -43,7 +46,7 @@ def input_fn(df, training, batch_size=32):
 
 def run_config(hparams, model_dir):
   classifier = tf.estimator.DNNClassifier(
-      hidden_units=hidden_units,
+      hidden_units=hparams['HIDDEN_UNITS'],
       feature_columns=feature_columns,
       n_classes=len(labels),
       label_vocabulary=labels,
@@ -89,19 +92,21 @@ best_run = None
 
 DROPOUT = [0.1, 0.2]
 LEARNING_RATE = [0.1, 0.3]
-for dropout in DROPOUT:
-  for learning_rate in LEARNING_RATE:
-    hparams = {}
-    hparams['DROPOUT'] = dropout
-    hparams['LEARNING_RATE'] = learning_rate
-    logging.debug("Session #%d" % session_num)
-    logging.debug('hparams: %s', hparams)
-    run = run_config(hparams=hparams, model_dir=args.output_model_path+"/"+str(session_num))
-    session_runs.append(run)
-    if best_run is None or best_run["accuracy"] < run["accuracy"]:
-        # Set current model as the classifier to export
-        best_run = run
-    session_num += 1
+for hidden_units in HIDDEN_UNITS:
+    for dropout in DROPOUT:
+      for learning_rate in LEARNING_RATE:
+        hparams = {}
+        hparams['HIDDEN_UNITS'] = hidden_units
+        hparams['DROPOUT'] = dropout
+        hparams['LEARNING_RATE'] = learning_rate
+        logging.debug("Session #%d" % session_num)
+        logging.debug('hparams: %s', hparams)
+        run = run_config(hparams=hparams, model_dir=args.output_model_path+"/"+str(session_num))
+        session_runs.append(run)
+        if best_run is None or best_run["accuracy"] < run["accuracy"]:
+            # Set current model as the classifier to export
+            best_run = run
+        session_num += 1
 
 # Train the model
 logging.debug("Training end")
