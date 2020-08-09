@@ -78,7 +78,7 @@ def run_config(hparams, model_dir):
 
 # Train the model
 logging.debug("Training model...")
-chunk_size = 8**6
+chunk_size = 9**6
 train_dfs = np.split(df, range(chunk_size, math.ceil(df.shape[0] / chunk_size) * chunk_size, chunk_size))
 del df
 round = len(train_dfs)
