@@ -11,6 +11,11 @@ import time
 import datetime
 
 logging.basicConfig(level=logging.DEBUG)
+
+import os
+logging.debug('os.cpu_count(): {t}'.format(t=os.cpu_count()))
+logging.debug('len(os.sched_getaffinity(0)): {t}'.format(t=len(os.sched_getaffinity(0))))
+
 start = time.time()
 logging.debug('START: {t}'.format(t=datetime.datetime.now()))
 
