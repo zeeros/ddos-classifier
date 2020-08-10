@@ -10,6 +10,11 @@ from pathlib import Path
 import time
 import datetime
 
+print("COMPILER_VERSION:",tensorflow.version.COMPILER_VERSION)
+print("GIT_VERSION:",tensorflow.version.GIT_VERSION)
+print("GRAPH_DEF_VERSION:",tensorflow.version.GRAPH_DEF_VERSION)
+print("VERSION:",tensorflow.version.VERSION)
+
 logging.basicConfig(level=logging.DEBUG)
 start = time.time()
 logging.debug('START: {t}'.format(t=datetime.datetime.now()))
