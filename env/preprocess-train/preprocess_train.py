@@ -10,14 +10,15 @@ from pathlib import Path
 import time
 import datetime
 
-print("COMPILER_VERSION:",tf.version.COMPILER_VERSION)
-print("GIT_VERSION:",tf.version.GIT_VERSION)
-print("GRAPH_DEF_VERSION:",tf.version.GRAPH_DEF_VERSION)
-print("VERSION:",tf.version.VERSION)
-
 logging.basicConfig(level=logging.DEBUG)
 start = time.time()
 logging.debug('START: {t}'.format(t=datetime.datetime.now()))
+
+logging.debug("COMPILER_VERSION: {t}".format(t=tf.version.COMPILER_VERSION))
+logging.debug("GIT_VERSION: {t}".format(t=tf.version.GIT_VERSION))
+logging.debug("GRAPH_DEF_VERSION: {t}".format(t=tf.version.GRAPH_DEF_VERSION))
+logging.debug("VERSION: {t}".format(t=tf.version.VERSION))
+
 
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Preprocessing for training component')
