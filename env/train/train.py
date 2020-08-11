@@ -45,6 +45,7 @@ def input_fn(df, training, batch_size=32):
     return dataset.batch(batch_size)
 
 def run_config(hparams, model_dir):
+  start = time.time()
   classifier = tf.estimator.DNNClassifier(
       hidden_units=hparams['HIDDEN_UNITS'],
       feature_columns=feature_columns,
@@ -65,16 +66,24 @@ def run_config(hparams, model_dir):
           log_step_count_steps=10**5
       )
   )
+  start = time.time()
   train_df_count = int(round*(80/100))
   # Train over #train_df_count dataframes
   for train_df in train_dfs[:train_df_count]:
     classifier.train(input_fn=lambda: input_fn(train_df, training=True), steps=10**4)
+  end = time.time()
+  training_time = (end - start)
+  start = time.time()
   accuracies = []
   # Evaluate over the remaining dataframes
   for evaluate_df in train_dfs[train_df_count:]:
     accuracies.append(classifier.evaluate(input_fn=lambda: input_fn(evaluate_df, training=False))['accuracy'])
+  end = time.time()
+  validation_time = (end - start)
   return {
         "hparams": hparams,
+        "training_time": training_time,
+        "validation_time": validation_time,
         "classifier": classifier,
         "accuracy": sum(accuracies)/len(accuracies)
     }
@@ -102,6 +111,8 @@ for hidden_units in HIDDEN_UNITS:
         logging.debug("Session #%d" % session_num)
         logging.debug('hparams: %s', hparams)
         run = run_config(hparams=hparams, model_dir=args.output_model_path+"/"+str(session_num))
+        logging.debug("Training time: %s", run["training_time"])
+        logging.debug("Validation time: %s", run["validation_time"])
         session_runs.append(run)
         if best_run is None or best_run["accuracy"] < run["accuracy"]:
             # Set current model as the classifier to export

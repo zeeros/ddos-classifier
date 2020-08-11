@@ -14,12 +14,6 @@ logging.basicConfig(level=logging.DEBUG)
 start = time.time()
 logging.debug('START: {t}'.format(t=datetime.datetime.now()))
 
-logging.debug("COMPILER_VERSION: {t}".format(t=tf.version.COMPILER_VERSION))
-logging.debug("GIT_VERSION: {t}".format(t=tf.version.GIT_VERSION))
-logging.debug("GRAPH_DEF_VERSION: {t}".format(t=tf.version.GRAPH_DEF_VERSION))
-logging.debug("VERSION: {t}".format(t=tf.version.VERSION))
-
-
 # Defining and parsing the command-line arguments
 parser = argparse.ArgumentParser(description='Preprocessing for training component')
 parser.add_argument('--output-dataset-path', type=str, help='Path to the preprocessed training dataset')
