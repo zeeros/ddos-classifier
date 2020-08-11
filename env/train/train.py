@@ -82,8 +82,8 @@ def run_config(hparams, model_dir):
   validation_time = (end - start)
   return {
         "hparams": hparams,
-        "training_time": training_time,
-        "validation_time": validation_time,
+        "training_time": '{t}'.format(t=datetime.timedelta(seconds=training_time)),
+        "validation_time": '{t}'.format(t=datetime.timedelta(seconds=validation_time)),
         "classifier": classifier,
         "accuracy": sum(accuracies)/len(accuracies)
     }
