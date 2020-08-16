@@ -1,0 +1,116 @@
+#+TITLE: Automating AI lifecycle: the DDoS use case
+#+AUTHOR: Eros Zaupa
+#+REVEAL_THEME: white
+#+OPTIONS: num:nil toc:nil
+* Automating AI lifecycle: the DDoS use case
+Eros Zaupa
+* Project goals
+- CICDDoS2019 :: Discover this new dataset for DDoS attacks
+- DNN :: Design and develop a classifier using the dataset
+- Kubeflow :: Design and develop a ML pipeline for the DNN
+* CICDDoS2019
+** Proposed taxonomy
+[[file:https://www.unb.ca/cic/_assets/images/ddostaxonomy.png]]  [[https://www.unb.ca/cic/datasets/ddos-2019.html]]
+** Dataset
+- Raw data :: With network traffic and event logs
+- CSV files :: More than 80 traffic features extracted from the raw
+               data
+** Training dataset
+[[file:./img/train_ds.png]]
+
+Total number of records: 50,063,112
+** Testing dataset
+[[file:./img/test_ds.png]]
+
+Total number of records: 20,172,83
+** Datasets for DNN
+[[file:./img/train2_ds.png]]
+Training dataset
+
+[[file:./img/test_ds.png]]
+Testing dataset
+
+* DNN
+** Development
+- Python 3.7.7
+  - pandas 1.0.3
+  - scikit-learn 0.23.1
+- Tensorflow 2.1.0
+** Estimators
+[[file:https://miro.medium.com/max/700/1*8e8Aq_GlJFy8tGuZx1F2IA.png]]
+
+Tensorflow API stack
+** Estimator API
+[[file:https://miro.medium.com/max/700/1*LF9lKi-LaNRwyL5lLfKRNg.png]]
+
+Schematic of Estimator
+** Design
+- Network
+  - Dense, feed-forward neural network
+- Multiclassification
+  - 8 classes
+- Features
+  - 20 most useful features
+- Batch normalization
+- Adam optimizer
+** Hyperparameter tuning
+- Number of hidden units
+  - [60, 30, 20]
+  - [60, 40, 30, 20]
+- Dropout rate
+  - 0.1
+  - 0.2
+- Learning rate
+  - 0.1
+  - 0.3
+* Kubeflow
+** Develoment
+- Docker 18.09.7
+- Kubernetes v1.15.3
+- Kubeflow v1.0
+ - Kubeflow Pipeline SDK v1.0.0
+** Resources
+- Master node :: 4 VCPUs, 8GB RAM, 100GB of storage
+- 2 x Slave nodes :: 4 VCPUs, 16GB RAM, 100GB of storage
+- OS :: Ubuntu 16.04 LTS
+** Pipelines
+[[file:./img/pipeline.png]]
+** Components
+- Base image :: All the shared dependencies
+  - Preprocess-train :: Training dataset + Source code
+  - Preprocess-test :: Testing dataset + Source code
+  - Train :: Source code
+  - Test :: Source code
+** Experiments
+[[file:./img/experiment.png]]
+** Behaviour
+- Load is distribution :: Components are executed according to the
+     available resources
+- Failure :: If any node fails, the experiment is resumed as soon as
+             the node is again available
+* Results
+** Solution 1
+[[file:./img/solution1.png]]
+** Solution 2a
+[[file:./img/solution2a.png]]
+** Solution 2b
+[[file:./img/solution2b.png]]
+** Performance
+[[file:./img/performance.png]]
+** Timing
+[[file:./img/timing.png]]
+** Comments
+- Significant reductions in times with concurrency
+- Small overhead on component initialization and management
+- Pipeline implementations are overall slower than the notebook
+  execution
+  - Warning :: Your CPU supports instructions that this TensorFlow
+               binary was not compiled touse: SSE4.1 SSE4.2
+** Conclusions
+- Dataset :: Highly inbalanced
+  - Deal with the inbalance (e.g. resampling)
+  - Use of raw data
+- Kubeflow :: Portability/reusability and concurrency
+  - TensorFlow with full instruction set support
+  - Increase the level of concurrency
+  - Kubeflow Katib for hyperparameter tuning

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Automating AI lifecycle: the DDoS use case</title>
+<meta name="author" content="(Eros Zaupa)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js-master/dist/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js-master/dist/theme/white.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js-master/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section>
+<section id="slide-org684925d">
+<h2 id="org684925d">Automating AI lifecycle: the DDoS use case</h2>
+<p>
+Eros Zaupa
+</p>
+</section>
+</section>
+<section>
+<section id="slide-orgb3099a2">
+<h2 id="orgb3099a2">Project goals</h2>
+<dl>
+<dt>CICDDoS2019</dt><dd>Discover this new dataset for DDoS attacks</dd>
+<dt>DNN</dt><dd>Design and develop a classifier using the dataset</dd>
+<dt>Kubeflow</dt><dd>Design and develop a ML pipeline for the DNN</dd>
+
+</dl>
+</section>
+</section>
+<section>
+<section id="slide-org9eb26cd">
+<h2 id="org9eb26cd">CICDDoS2019</h2>
+<div class="outline-text-2" id="text-org9eb26cd">
+</div>
+</section>
+<section id="slide-org55c9732">
+<h3 id="org55c9732">Proposed taxonomy</h3>
+<p>
+<img src="https://www.unb.ca/cic/_assets/images/ddostaxonomy.png" alt="ddostaxonomy.png" />  <a href="https://www.unb.ca/cic/datasets/ddos-2019.html">https://www.unb.ca/cic/datasets/ddos-2019.html</a>
+</p>
+</section>
+<section id="slide-org8bb2076">
+<h3 id="org8bb2076">Dataset</h3>
+<dl>
+<dt>Raw data</dt><dd>With network traffic and event logs</dd>
+<dt>CSV files</dt><dd>More than 80 traffic features extracted from the raw
+data</dd>
+
+</dl>
+</section>
+<section id="slide-org1fab11c">
+<h3 id="org1fab11c">Training dataset</h3>
+
+<div class="figure">
+<p><img src="./img/train_ds.png" alt="train_ds.png" />
+</p>
+</div>
+
+<p>
+Total number of records: 50,063,112
+</p>
+</section>
+<section id="slide-orgb72467d">
+<h3 id="orgb72467d">Testing dataset</h3>
+
+<div class="figure">
+<p><img src="./img/test_ds.png" alt="test_ds.png" />
+</p>
+</div>
+
+<p>
+Total number of records: 20,172,83
+</p>
+</section>
+<section id="slide-org836b1aa">
+<h3 id="org836b1aa">Datasets for DNN</h3>
+<p>
+<img src="./img/train2_ds.png" alt="train2_ds.png" />
+Training dataset
+</p>
+
+<p>
+<img src="./img/test_ds.png" alt="test_ds.png" />
+Testing dataset
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org4cb3a6b">
+<h2 id="org4cb3a6b">DNN</h2>
+<div class="outline-text-2" id="text-org4cb3a6b">
+</div>
+</section>
+<section id="slide-org0cb719d">
+<h3 id="org0cb719d">Development</h3>
+<ul>
+<li>Python 3.7.7
+<ul>
+<li>pandas 1.0.3</li>
+<li>scikit-learn 0.23.1</li>
+
+</ul></li>
+<li>Tensorflow 2.1.0</li>
+
+</ul>
+</section>
+<section id="slide-orgf1030ad">
+<h3 id="orgf1030ad">Estimators</h3>
+
+<div class="figure">
+<p><img src="https://miro.medium.com/max/700/1*8e8Aq_GlJFy8tGuZx1F2IA.png" alt="1*8e8Aq_GlJFy8tGuZx1F2IA.png" />
+</p>
+</div>
+
+<p>
+Tensorflow API stack
+</p>
+</section>
+<section id="slide-org120a120">
+<h3 id="org120a120">Estimator API</h3>
+
+<div class="figure">
+<p><img src="https://miro.medium.com/max/700/1*LF9lKi-LaNRwyL5lLfKRNg.png" alt="1*LF9lKi-LaNRwyL5lLfKRNg.png" />
+</p>
+</div>
+
+<p>
+Schematic of Estimator
+</p>
+</section>
+<section id="slide-orgd20ed36">
+<h3 id="orgd20ed36">Design</h3>
+<ul>
+<li>Network
+<ul>
+<li>Dense, feed-forward neural network</li>
+
+</ul></li>
+<li>Multiclassification
+<ul>
+<li>8 classes</li>
+
+</ul></li>
+<li>Features
+<ul>
+<li>20 most useful features</li>
+
+</ul></li>
+<li>Batch normalization</li>
+<li>Adam optimizer</li>
+
+</ul>
+</section>
+<section id="slide-orgdd49dfe">
+<h3 id="orgdd49dfe">Hyperparameter tuning</h3>
+<ul>
+<li>Number of hidden units
+<ul>
+<li>[60, 30, 20]</li>
+<li>[60, 40, 30, 20]</li>
+
+</ul></li>
+<li>Dropout rate
+<ul>
+<li>0.1</li>
+<li>0.2</li>
+
+</ul></li>
+<li>Learning rate
+<ul>
+<li>0.1</li>
+<li>0.3</li>
+
+</ul></li>
+
+</ul>
+</section>
+</section>
+<section>
+<section id="slide-org4b0a296">
+<h2 id="org4b0a296">Kubeflow</h2>
+<div class="outline-text-2" id="text-org4b0a296">
+</div>
+</section>
+<section id="slide-orgc0cef6c">
+<h3 id="orgc0cef6c">Develoment</h3>
+<ul>
+<li>Docker 18.09.7</li>
+<li>Kubernetes v1.15.3</li>
+<li>Kubeflow v1.0
+<ul>
+<li>Kubeflow Pipeline SDK v1.0.0</li>
+
+</ul></li>
+
+</ul>
+</section>
+<section id="slide-org8b07c72">
+<h3 id="org8b07c72">Resources</h3>
+<dl>
+<dt>Master node</dt><dd>4 VCPUs, 8GB RAM, 100GB of storage</dd>
+<dt>2 x Slave nodes</dt><dd>4 VCPUs, 16GB RAM, 100GB of storage</dd>
+<dt>OS</dt><dd>Ubuntu 16.04 LTS</dd>
+
+</dl>
+</section>
+<section id="slide-org79bee74">
+<h3 id="org79bee74">Pipelines</h3>
+
+<div class="figure">
+<p><img src="./img/pipeline.png" alt="pipeline.png" />
+</p>
+</div>
+</section>
+<section id="slide-orge10ab19">
+<h3 id="orge10ab19">Components</h3>
+<dl>
+<dt>Base image</dt><dd>All the shared dependencies
+<dl>
+<dt>Preprocess-train</dt><dd>Training dataset + Source code</dd>
+<dt>Preprocess-test</dt><dd>Testing dataset + Source code</dd>
+<dt>Train</dt><dd>Source code</dd>
+<dt>Test</dt><dd>Source code</dd>
+
+</dl></dd>
+
+</dl>
+</section>
+<section id="slide-orge9bc767">
+<h3 id="orge9bc767">Experiments</h3>
+
+<div class="figure">
+<p><img src="./img/experiment.png" alt="experiment.png" />
+</p>
+</div>
+</section>
+<section id="slide-orgfc795dd">
+<h3 id="orgfc795dd">Behaviour</h3>
+<dl>
+<dt>Load is distribution</dt><dd>Components are executed according to the
+available resources</dd>
+<dt>Failure</dt><dd>If any node fails, the experiment is resumed as soon as
+the node is again available</dd>
+
+</dl>
+</section>
+</section>
+<section>
+<section id="slide-orgdd87374">
+<h2 id="orgdd87374">Results</h2>
+<div class="outline-text-2" id="text-orgdd87374">
+</div>
+</section>
+<section id="slide-orgb112a80">
+<h3 id="orgb112a80">Solution 1</h3>
+
+<div class="figure">
+<p><img src="./img/solution1.png" alt="solution1.png" />
+</p>
+</div>
+</section>
+<section id="slide-orgdd8b678">
+<h3 id="orgdd8b678">Solution 2a</h3>
+
+<div class="figure">
+<p><img src="./img/solution2a.png" alt="solution2a.png" />
+</p>
+</div>
+</section>
+<section id="slide-org23bba2a">
+<h3 id="org23bba2a">Solution 2b</h3>
+
+<div class="figure">
+<p><img src="./img/solution2b.png" alt="solution2b.png" />
+</p>
+</div>
+</section>
+<section id="slide-org0fd65de">
+<h3 id="org0fd65de">Performance</h3>
+
+<div class="figure">
+<p><img src="./img/performance.png" alt="performance.png" />
+</p>
+</div>
+</section>
+<section id="slide-org09e00f6">
+<h3 id="org09e00f6">Timing</h3>
+
+<div class="figure">
+<p><img src="./img/timing.png" alt="timing.png" />
+</p>
+</div>
+</section>
+<section id="slide-org370bbeb">
+<h3 id="org370bbeb">Comments</h3>
+<ul>
+<li>Significant reductions in times with concurrency</li>
+<li>Small overhead on component initialization and management</li>
+<li>Pipeline implementations are overall slower than the notebook
+execution
+<dl>
+<dt>Warning</dt><dd>Your CPU supports instructions that this TensorFlow
+binary was not compiled touse: SSE4.1 SSE4.2</dd>
+
+</dl></li>
+
+</ul>
+</section>
+<section id="slide-orge312cd3">
+<h3 id="orge312cd3">Conclusions</h3>
+<dl>
+<dt>Dataset</dt><dd>Highly inbalanced
+<ul>
+<li>Deal with the inbalance (e.g. resampling)</li>
+<li>Use of raw data</li>
+
+</ul></dd>
+<dt>Kubeflow</dt><dd>Portability/reusability and concurrency
+<ul>
+<li>TensorFlow with full instruction set support</li>
+<li>Increase the level of concurrency</li>
+<li>Kubeflow Katib for hyperparameter tuning</li>
+
+</ul></dd>
+
+</dl>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js-master/dist/reveal.js"></script>
+<script src="./reveal.js-master/plugin/markdown/markdown.js"></script>
+<script src="./reveal.js-master/plugin/zoom/zoom.js"></script>
+<script src="./reveal.js-master/plugin/notes/notes.js"></script>
+
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+plugins: [RevealMarkdown,RevealZoom,RevealNotes],
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+]
+});
+</script>
+</body>
+</html>
