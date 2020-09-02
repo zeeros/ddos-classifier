@@ -2,49 +2,71 @@
 #+AUTHOR: Eros Zaupa
 #+REVEAL_THEME: white
 #+OPTIONS: num:nil toc:nil
+#+REVEAL_INIT_OPTIONS: slideNumber:"c/t"
 * Automating AI lifecycle: the DDoS use case
 Eros Zaupa
 * Project goals
-- CICDDoS2019 :: Discover this new dataset for DDoS attacks
-- DNN :: Design and develop a classifier using the dataset
-- Kubeflow :: Design and develop a ML pipeline for the DNN
-* CICDDoS2019
-** Proposed taxonomy
-[[file:https://www.unb.ca/cic/_assets/images/ddostaxonomy.png]]  [[https://www.unb.ca/cic/datasets/ddos-2019.html]]
-** Dataset
+- CICDDoS2019 :: Explore a new dataset for DDoS attacks
+- DNN :: Develop a detection system using the dataset
+- Kubeflow :: Design and develop a ML pipeline
+* Why
+AI solutions have a typical lifecycle
+- Preprocessing :: Convert data into a suitable format for the problem
+                   under study
+- Hyper-parameter tuning :: Search the best model configuration for
+     the task
+- Testing :: Measure the model performances on unseen data
+
+/Problem/ - Resource and time demanding
+* What 
+Find a way to automate and speed up this lifecycle
+- Idea :: Distribute the workload among different units
+  - Identify any independent part of the execution flow
+  - Parallelize tasks when possible
+* How
+- Kubeflow :: Deployment of ML workflows on Kubernetes
+  - Toolkit for K8s
+  - Simple, portable and scalable
+  - Development, testing, and production-level serving
+* 
+[[file:./img/without_kf.jpg]]
+* 
+[[file:./img/with_kf.jpg]]
+* CICDDoS2019 - Dataset
 - Raw data :: With network traffic and event logs
 - CSV files :: More than 80 traffic features extracted from the raw
                data
-** Training dataset
+* COMMENT Proposed taxonomy
+[[file:https://www.unb.ca/cic/_assets/images/ddostaxonomy.png]]  [[https://www.unb.ca/cic/datasets/ddos-2019.html]]
+* COMMENT Training dataset
 [[file:./img/train_ds.png]]
 
 Total number of records: 50,063,112
-** Testing dataset
+* COMMENT Testing dataset
 [[file:./img/test_ds.png]]
 
 Total number of records: 20,172,83
-** Datasets for DNN
+* Datasets for DNN
 [[file:./img/train2_ds.png]]
 Training dataset
 
 [[file:./img/test_ds.png]]
 Testing dataset
 
-* DNN
-** Development
+* COMMENT Development
 - Python 3.7.7
   - pandas 1.0.3
   - scikit-learn 0.23.1
 - Tensorflow 2.1.0
-** Estimators
+* Tensorflow Estimators
 [[file:https://miro.medium.com/max/700/1*8e8Aq_GlJFy8tGuZx1F2IA.png]]
 
 Tensorflow API stack
-** Estimator API
+* COMMENT Estimator API
 [[file:https://miro.medium.com/max/700/1*LF9lKi-LaNRwyL5lLfKRNg.png]]
 
 Schematic of Estimator
-** Design
+* Design
 - Network
   - Dense, feed-forward neural network
 - Multiclassification
@@ -53,7 +75,7 @@ Schematic of Estimator
   - 20 most useful features
 - Batch normalization
 - Adam optimizer
-** Hyperparameter tuning
+* Hyperparameter tuning
 - Number of hidden units
   - [60, 30, 20]
   - [60, 40, 30, 20]
@@ -63,54 +85,76 @@ Schematic of Estimator
 - Learning rate
   - 0.1
   - 0.3
-* Kubeflow
-** Develoment
+* Pipeline develoment
 - Docker 18.09.7
 - Kubernetes v1.15.3
 - Kubeflow v1.0
  - Kubeflow Pipeline SDK v1.0.0
-** Resources
+* Resources
 - Master node :: 4 VCPUs, 8GB RAM, 100GB of storage
 - 2 x Slave nodes :: 4 VCPUs, 16GB RAM, 100GB of storage
 - OS :: Ubuntu 16.04 LTS
-** Pipelines
+* Pipelines
+Description of an ML workflow, which
+- Components, and how they combine in the form of a graph
+- Inputs required for a run
+- Inputs and outputs of each component
+* Pipelines
 [[file:./img/pipeline.png]]
-** Components
+* Components
 - Base image :: All the shared dependencies
-  - Preprocess-train :: Training dataset + Source code
-  - Preprocess-test :: Testing dataset + Source code
-  - Train :: Source code
-  - Test :: Source code
-** Experiments
+- Preprocess-train :: Training dataset + Source code
+- Preprocess-test :: Testing dataset + Source code
+- Train :: Source code
+- Test :: Source code
+* Experiments
+- Workspace to try different configurations of pipelines
+- Organize runs into logical groups
+* Experiments
 [[file:./img/experiment.png]]
-** Behaviour
-- Load is distribution :: Components are executed according to the
+* Behaviour
+- Load is distributed :: Components are executed according to the
      available resources
 - Failure :: If any node fails, the experiment is resumed as soon as
              the node is again available
-* Results
-** Solution 1
+* Solution 1
+- Jupyter notebook, implementing all the phases
+- Run on a notebook server instance (2CPU, 10GB)
+* Solution 1
 [[file:./img/solution1.png]]
-** Solution 2a
+* Solution 2a
+Concurrent, with two branches (with training and testing) executing
+the hyper-parameter tuning for dropout rate and learning rate
+- Branch 1 on a [60, 30, 20] structure
+- Branch 2 on a [60, 40, 30, 20] structure.
+* Solution 2a
 [[file:./img/solution2a.png]]
-** Solution 2b
+* Solution 2b
+Non-concurrent, with just one branch that executes hyper-parameter
+tuning on number of hidden units, learning rate and dropout rate
+* Solution 2b
 [[file:./img/solution2b.png]]
-** Performance
+* Performance
 [[file:./img/performance.png]]
-** Timing
+* Timing
 [[file:./img/timing.png]]
-** Comments
+* Comments
 - Significant reductions in times with concurrency
 - Small overhead on component initialization and management
 - Pipeline implementations are overall slower than the notebook
   execution
   - Warning :: Your CPU supports instructions that this TensorFlow
                binary was not compiled touse: SSE4.1 SSE4.2
-** Conclusions
-- Dataset :: Highly inbalanced
+* Conclusions - Dataset
+- Highly inbalanced
   - Deal with the inbalance (e.g. resampling)
-  - Use of raw data
-- Kubeflow :: Portability/reusability and concurrency
-  - TensorFlow with full instruction set support
-  - Increase the level of concurrency
-  - Kubeflow Katib for hyperparameter tuning
+- More potential to be discovered
+  - Use of raw data (and custom exctraction of features)
+* Conclusions - Kubeflow
+Portability, reusability, concurrency
+- TensorFlow with full instruction set support
+  - May significantly reduce training times
+- Increase the level of concurrency
+  - Scaling with the amount resources
+- Kubeflow Katib for hyperparameter tuning
+  - Beta/alpha stage, focus on optimization
